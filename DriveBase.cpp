@@ -27,14 +27,14 @@ void DriveBase::EnableTeleopControls() {
 	m_rightDrive->Set(m_controls->GetRightY());
 }
 
-int DriveBase::GetLeftEncoderValue() {
+int DriveBase::GetLeftEncoderCount() {
 	m_leftEncoder->Start();
-	return m_leftEncoder->GetRaw();
+	return m_leftEncoder->Get();
 }
 
-int DriveBase::GetRightEncoderValue() {
+int DriveBase::GetRightEncoderCount() {
 	m_rightEncoder->Start();
-	return m_rightEncoder->GetRaw();
+	return m_rightEncoder->Get();
 }
 
 void DriveBase::ResetEncoders() {

@@ -1,6 +1,7 @@
 #include "WPILib.h"
 #include "DriveBase.h"
 #include "Controls.h"
+#include "HelperFunctions.h"
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -11,6 +12,7 @@
 class RobotDemo : public SimpleRobot
 {
 	DriveBase* drivebase;
+	Controls* controls;
 	
 	DriverStationLCD *dsLCD; 
 	DriverStation *driverStation;
@@ -19,6 +21,7 @@ public:
 	RobotDemo(void)
 	{
 		drivebase = DriveBase::GetInstance();
+		controls = Controls::GetInstance();
 		
 		dsLCD = DriverStationLCD::GetInstance();
 		driverStation = DriverStation::GetInstance();
@@ -46,8 +49,18 @@ public:
 			drivebase->EnableTeleopControls();
 			
 			// Print Encoder Values to Driver station LCD
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", drivebase->GetLeftEncoderValue());
-			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", drivebase->GetRightEncoderValue());
+			int leftEncoderCount = drivebase->GetLeftEncoderCount();
+			int rightEncoderCount = drivebase->GetRightEncoderCount();
+			
+			if(controls->GetLeftTrigger()) {
+				drivebase->ResetEncoders();
+			}
+						
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
+			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
+			
 			dsLCD->UpdateLCD();
 			
 			GetWatchdog().SetEnabled(false);

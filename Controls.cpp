@@ -23,3 +23,7 @@ float Controls::GetLeftY() {
 float Controls::GetRightY() {
 	return m_rightStick->GetY();
 }
+
+bool Controls::GetLeftTrigger() {
+	return m_leftStick->GetTrigger();
+}

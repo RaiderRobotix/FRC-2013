@@ -18,4 +18,9 @@ static const int LEFT_ENCODER_B = 2;
 static const int RIGHT_ENCODER_A = 3;
 static const int RIGHT_ENCODER_B = 4;
 
+// Encoders are geared at a 1:1 ratio.
+static const double TIRE_CIRCUMFERENCE = 27.75; 	// in inches
+static const double COUNTS_PER_REVOLUTION = 128.0;
+static const double INCHES_PER_COUNT = TIRE_CIRCUMFERENCE / COUNTS_PER_REVOLUTION;
+
 #endif

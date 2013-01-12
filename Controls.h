@@ -1,5 +1,5 @@
-#ifndef CONTROLS_H_
-#define CONTROLS_H_
+#ifndef CONTROLS_H
+#define CONTROLS_H
 
 #include "WPILib.h"
 
@@ -19,5 +19,6 @@ public:
 	
 	float GetLeftY();
 	float GetRightY();
+	bool GetLeftTrigger();
 };
 #endif

@@ -22,8 +22,8 @@ public:
 	static DriveBase* GetInstance();
 	DriveBase();
 	void EnableTeleopControls();
-	int GetLeftEncoderValue();
-	int GetRightEncoderValue();
+	int GetLeftEncoderCount();
+	int GetRightEncoderCount();
 	void ResetEncoders();
 };
 
