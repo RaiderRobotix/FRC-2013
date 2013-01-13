@@ -16,6 +16,7 @@ class RobotDemo : public SimpleRobot
 	
 	DriverStationLCD* dsLCD; 
 	DriverStation* driverStation;
+	
 	LiveWindow* liveWindow;
 
 public:
@@ -26,9 +27,10 @@ public:
 		
 		dsLCD = DriverStationLCD::GetInstance();
 		driverStation = DriverStation::GetInstance();
+		
 		liveWindow = LiveWindow::GetInstance();
 		
-		GetWatchdog().SetEnabled(false);
+		GetWatchdog().Kill();
 	}
 
 	/**
@@ -47,10 +49,22 @@ public:
 	void OperatorControl(void)
 	{
 		while (IsOperatorControl() && IsEnabled())
-		{
+		{	
 			drivebase->EnableTeleopControls();
+			// Print Encoder Values to Driver station LCD
+			int leftEncoderCount = drivebase->GetLeftEncoderCount();
+			int rightEncoderCount = drivebase->GetRightEncoderCount();
 			
-			GetWatchdog().SetEnabled(false);
+			if(controls->GetLeftTrigger()) {
+				drivebase->ResetEncoders();
+			}
+			
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
+			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
+			dsLCD->UpdateLCD();
+			
 			// Wait(0.005);
 		}
 	}
@@ -60,9 +74,17 @@ public:
 	 */
 	void Test() {
 		PIDController* leftEncoderController = drivebase->GetLeftEncoderController();
+		PIDController* rightEncoderController = drivebase->GetRightEncoderController();
+		float p = 0.019;
+		float i = 0.0;
+		float d = 0.016;
+		float f = 0.0;
+		float increment = 0.0001;
+		float speedIncrement = 0.001;
+		float setpoint = 300.0;
 		
 		while (IsTest() && IsEnabled()) {
-			// Try commenting this out to see if it conflicts with PID.
+			// Comment out teleop controls to test PID
 			// drivebase->EnableTeleopControls();
 			
 			// Print Encoder Values to Driver station LCD
@@ -72,33 +94,66 @@ public:
 			if(controls->GetLeftTrigger()) {
 				drivebase->ResetEncoders();
 			}
-						
+			
 			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
+
+			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "P %f I %f", p, i);
+			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "D %f F %f", d, f);
 			dsLCD->UpdateLCD();
 			
 			// Testing encoder PID control
-			if (controls->GetRightTrigger()){
-				float p = 0.01;
-				float i = 0.0;
-				float d = 0.0;
-				float f = 0.1; // feed forwad speed
-				leftEncoderController->SetPID(p, i, d, f);
-				leftEncoderController->SetSetpoint(256.0);
+			if (controls->GetRightTrigger()) {
+				p = 0.0;
+				i = 0.0;
+				d = 0.0;
+				f = 0.0;
+			}
+			
+			if (controls->GetRightButton(4)) {
 				leftEncoderController->Enable();
-				
-				printf("PID Enabled %s\n", leftEncoderController->IsEnabled() ? "true" : "false");
+				rightEncoderController->Enable();
+			} 
+			if (controls->GetRightButton(5)){
+				leftEncoderController->Disable();
+				rightEncoderController->Disable();
 			}
-			if (controls->GetRightButton(2)) {
-				drivebase->DisableLeftEncoderPID();
-				printf("PID Disabled\n");
+
+			printf("PID %s\n", leftEncoderController->IsEnabled() ? "Enabled" : "Disabled");
+			
+			if (controls->GetLeftButton(3)) {
+				p += increment;
+			} else if (controls->GetLeftButton(2)) {
+				p -= increment;
 			}
 			
+			if (controls->GetLeftButton(9)) {
+				i += increment;
+			} else if (controls->GetLeftButton(8)) {
+				i -= increment;
+			}
 			
+			if (controls->GetRightButton(3)) {
+				d += increment;
+			} else if (controls->GetRightButton(2)) {
+				d -= increment;
+			}
+			
+			if (controls->GetRightButton(9)) {
+				f += speedIncrement;
+			} else if (controls->GetRightButton(8)) {
+				f -= speedIncrement;
+			}
+			
+			leftEncoderController->SetPID(p, i, d);
+			rightEncoderController->SetPID(p, i, d);
+			
+			leftEncoderController->SetSetpoint(setpoint);
+			rightEncoderController->SetSetpoint(setpoint);
+
 			liveWindow->Run();
-			GetWatchdog().SetEnabled(false);
 		}
 	}
 };

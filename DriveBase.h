@@ -19,6 +19,7 @@ private:
 	Encoder* m_rightEncoder;
 	
 	PIDController* m_leftEncoderController;
+	PIDController* m_rightEncoderController;
 
 public:
 	static DriveBase* GetInstance();
@@ -29,10 +30,7 @@ public:
 	void ResetEncoders();
 	
 	PIDController* GetLeftEncoderController();
-	void EnableLeftEncoderPID();
-	void DisableLeftEncoderPID();
-	void SetLeftEncoderPID(float p, float i, float d, float f = 0.1);
-	void SetLeftEncoderSetPoint(float setPoint);
+	PIDController* GetRightEncoderController();
 };
 
 #endif

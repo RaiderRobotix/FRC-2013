@@ -19,8 +19,10 @@ static const int RIGHT_ENCODER_A = 13;
 static const int RIGHT_ENCODER_B = 14;
 
 // Encoders are geared at a 1:1 ratio.
+// TODO: Configuration for left and right sides of drivetrain.
 static const double TIRE_CIRCUMFERENCE = 27.75; 	// in inches
 static const double COUNTS_PER_REVOLUTION = 128.0;
 static const double INCHES_PER_COUNT = TIRE_CIRCUMFERENCE / COUNTS_PER_REVOLUTION;
+static const double DISTANCE_PER_PULSE = COUNTS_PER_REVOLUTION / TIRE_CIRCUMFERENCE;
 
 #endif

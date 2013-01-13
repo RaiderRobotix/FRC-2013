@@ -21,11 +21,15 @@ DriveBase::DriveBase() {
 	m_leftEncoder = new Encoder(LEFT_ENCODER_A, LEFT_ENCODER_B);
 	m_rightEncoder = new Encoder(RIGHT_ENCODER_A, RIGHT_ENCODER_B, true);
 	
-	m_leftEncoderController = new PIDController(0.0, 0.0, 0.0, m_leftEncoder, m_leftDrive);
+	m_leftEncoder->SetDistancePerPulse(INCHES_PER_COUNT);
+	m_rightEncoder->SetDistancePerPulse(INCHES_PER_COUNT);
 	
-	LiveWindow *liveWindow = LiveWindow::GetInstance();
-	liveWindow->AddSensor("DriveBase", "Left Encoder", m_leftEncoder);
-	liveWindow->AddSensor("DriveBase", "Right Encoder", m_rightEncoder);
+	m_leftEncoderController = new PIDController(0.0, 0.0, 0.0, m_leftEncoder, m_leftDrive);
+	m_rightEncoderController = new PIDController(0.0, 0.0, 0.0, m_rightEncoder, m_rightDrive);
+	
+	LiveWindow* liveWindow = LiveWindow::GetInstance();
+	liveWindow->AddComponent("Left Drive", "Left Encoder", m_leftEncoderController);
+	liveWindow->AddComponent("Right Drive", "Right Encoder", m_rightEncoderController);
 }
 
 void DriveBase::EnableTeleopControls() {
@@ -52,24 +56,6 @@ PIDController* DriveBase::GetLeftEncoderController() {
 	return m_leftEncoderController;
 }
 
-/**
- * This must be called since the constructor sets the default PID values to 0.
- */
-void DriveBase::SetLeftEncoderPID(float p, float i, float d, float f){
-	m_leftEncoderController->SetPID(p, i, d, f);
-}
-
-/**
- * Call this after setting up the PID.
- */
-void DriveBase::EnableLeftEncoderPID() {
-	m_leftEncoderController->Enable();
-}
-
-void DriveBase::DisableLeftEncoderPID() {
-	m_leftEncoderController->Disable();
-}
-
-void DriveBase::SetLeftEncoderSetPoint(float setPoint) {
-	m_leftEncoderController->SetSetpoint(setPoint);
+PIDController* DriveBase::GetRightEncoderController() {
+	return m_rightEncoderController;
 }
