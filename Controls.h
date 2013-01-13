@@ -20,5 +20,8 @@ public:
 	float GetLeftY();
 	float GetRightY();
 	bool GetLeftTrigger();
+	bool GetRightTrigger();
+	bool GetLeftButton(int button);
+	bool GetRightButton(int button);
 };
 #endif

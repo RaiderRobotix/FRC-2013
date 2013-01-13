@@ -27,3 +27,15 @@ float Controls::GetRightY() {
 bool Controls::GetLeftTrigger() {
 	return m_leftStick->GetTrigger();
 }
+
+bool Controls::GetRightTrigger() {
+	return m_rightStick->GetTrigger();
+}
+
+bool Controls::GetLeftButton(int button) {
+	return m_leftStick->GetRawButton(button);
+}
+
+bool Controls::GetRightButton(int button) {
+	return m_rightStick->GetRawButton(button);
+}

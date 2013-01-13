@@ -14,8 +14,9 @@ class RobotDemo : public SimpleRobot
 	DriveBase* drivebase;
 	Controls* controls;
 	
-	DriverStationLCD *dsLCD; 
-	DriverStation *driverStation;
+	DriverStationLCD* dsLCD; 
+	DriverStation* driverStation;
+	LiveWindow* liveWindow;
 
 public:
 	RobotDemo(void)
@@ -25,6 +26,7 @@ public:
 		
 		dsLCD = DriverStationLCD::GetInstance();
 		driverStation = DriverStation::GetInstance();
+		liveWindow = LiveWindow::GetInstance();
 		
 		GetWatchdog().SetEnabled(false);
 	}
@@ -48,6 +50,21 @@ public:
 		{
 			drivebase->EnableTeleopControls();
 			
+			GetWatchdog().SetEnabled(false);
+			// Wait(0.005);
+		}
+	}
+	
+	/**
+	 * Runs during test mode
+	 */
+	void Test() {
+		PIDController* leftEncoderController = drivebase->GetLeftEncoderController();
+		
+		while (IsTest() && IsEnabled()) {
+			// Try commenting this out to see if it conflicts with PID.
+			// drivebase->EnableTeleopControls();
+			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
@@ -60,19 +77,29 @@ public:
 			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
-			
 			dsLCD->UpdateLCD();
 			
+			// Testing encoder PID control
+			if (controls->GetRightTrigger()){
+				float p = 0.01;
+				float i = 0.0;
+				float d = 0.0;
+				float f = 0.1; // feed forwad speed
+				leftEncoderController->SetPID(p, i, d, f);
+				leftEncoderController->SetSetpoint(256.0);
+				leftEncoderController->Enable();
+				
+				printf("PID Enabled %s\n", leftEncoderController->IsEnabled() ? "true" : "false");
+			}
+			if (controls->GetRightButton(2)) {
+				drivebase->DisableLeftEncoderPID();
+				printf("PID Disabled\n");
+			}
+			
+			
+			liveWindow->Run();
 			GetWatchdog().SetEnabled(false);
-			Wait(0.005);				// wait for a motor update time
 		}
-	}
-	
-	/**
-	 * Runs during test mode
-	 */
-	void Test() {
-
 	}
 };
 

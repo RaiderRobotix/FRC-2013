@@ -13,10 +13,10 @@ static const int RIGHT_JOYSTICK_PORT = 2;
 
 // SENSORS
 
-static const int LEFT_ENCODER_A = 1;
-static const int LEFT_ENCODER_B = 2;
-static const int RIGHT_ENCODER_A = 3;
-static const int RIGHT_ENCODER_B = 4;
+static const int LEFT_ENCODER_A = 11;
+static const int LEFT_ENCODER_B = 12;
+static const int RIGHT_ENCODER_A = 13;
+static const int RIGHT_ENCODER_B = 14;
 
 // Encoders are geared at a 1:1 ratio.
 static const double TIRE_CIRCUMFERENCE = 27.75; 	// in inches
