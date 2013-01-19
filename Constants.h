@@ -18,6 +18,19 @@ static const int LEFT_ENCODER_B = 12;
 static const int RIGHT_ENCODER_A = 13;
 static const int RIGHT_ENCODER_B = 14;
 
+static const int GYRO_CHANNEL = 1;
+static const float GYRO_SENSITIVITY = 0.007; // 7 mV/deg/sec
+
+// ENCODER PID
+static const float ENCODER_P = 0.019;
+static const float ENCODER_I = 0.0;
+static const float ENCODER_D = 0.016;
+
+// GYRO PID
+static const float GYRO_P = 0.05;
+static const float GYRO_I = 0.003;
+static const float GYRO_D = 0.02;
+
 // Encoders are geared at a 1:1 ratio.
 // TODO: Configuration for left and right sides of drivetrain.
 static const double TIRE_CIRCUMFERENCE = 27.75; 	// in inches

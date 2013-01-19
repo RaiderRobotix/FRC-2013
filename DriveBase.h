@@ -20,17 +20,36 @@ private:
 	
 	PIDController* m_leftEncoderController;
 	PIDController* m_rightEncoderController;
+	
+	Gyro* m_gyro;
+	
+	PIDController* m_gyroController;
 
 public:
 	static DriveBase* GetInstance();
 	DriveBase();
 	void EnableTeleopControls();
+	
+	void SetSpeed(float speed);
+	void SetLeftSpeed(float speed);
+	void SetRightSpeed(float speed);
+	
+	float GetLeftSpeed();
+	float GetRightSpeed();
+	
 	int GetLeftEncoderCount();
 	int GetRightEncoderCount();
 	void ResetEncoders();
 	
-	PIDController* GetLeftEncoderController();
-	PIDController* GetRightEncoderController();
+	void SetEncoderSetpoint(float inches);
+	void EnableEncoderPid();
+	void DisableEncoderPid();
+	
+	void ResetGyro();
+	float GetGyroAngle();
+	
+	// TODO: Delete and properly set gyro PID stuff on drivebase.
+	PIDController* GetGyroController();
 };
 
 #endif

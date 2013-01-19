@@ -16,8 +16,6 @@ class RobotDemo : public SimpleRobot
 	
 	DriverStationLCD* dsLCD; 
 	DriverStation* driverStation;
-	
-	LiveWindow* liveWindow;
 
 public:
 	RobotDemo(void)
@@ -27,8 +25,6 @@ public:
 		
 		dsLCD = DriverStationLCD::GetInstance();
 		driverStation = DriverStation::GetInstance();
-		
-		liveWindow = LiveWindow::GetInstance();
 		
 		GetWatchdog().Kill();
 	}
@@ -51,18 +47,31 @@ public:
 		while (IsOperatorControl() && IsEnabled())
 		{	
 			drivebase->EnableTeleopControls();
+			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
 			
 			if(controls->GetLeftTrigger()) {
 				drivebase->ResetEncoders();
+				drivebase->ResetGyro();
+			}
+			
+			drivebase->SetEncoderSetpoint(54.0);
+			
+			if(controls->GetRightButton(4)) {
+				drivebase->EnableEncoderPid();
+			}
+			if(controls->GetRightButton(5)) {
+				drivebase->DisableEncoderPid();
 			}
 			
 			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
+			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f     ", drivebase->GetGyroAngle());
+			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "L: %f R: %f     ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
 			dsLCD->UpdateLCD();
 			
 			// Wait(0.005);
@@ -73,33 +82,72 @@ public:
 	 * Runs during test mode
 	 */
 	void Test() {
-		PIDController* leftEncoderController = drivebase->GetLeftEncoderController();
-		PIDController* rightEncoderController = drivebase->GetRightEncoderController();
-		float p = 0.019;
+		float p = -0.05;
 		float i = 0.0;
-		float d = 0.016;
+		float d = 0.0;
 		float f = 0.0;
-		float increment = 0.0001;
-		float speedIncrement = 0.001;
-		float setpoint = 300.0;
+		float setpoint = 90;
+		
+		float increment = 0.00001;
+		float speedIncrement = 0.00001;
+		
+		float absoluteTolerance = 1.0;
+		Timer* timer = new Timer();
+		bool timerStopped = false;
 		
 		while (IsTest() && IsEnabled()) {
 			// Comment out teleop controls to test PID
 			// drivebase->EnableTeleopControls();
 			
-			// Print Encoder Values to Driver station LCD
-			int leftEncoderCount = drivebase->GetLeftEncoderCount();
-			int rightEncoderCount = drivebase->GetRightEncoderCount();
-			
 			if(controls->GetLeftTrigger()) {
 				drivebase->ResetEncoders();
 			}
 			
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
-			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
-			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
-			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
-
+			// Controls for gyro
+			PIDController* gyroController = drivebase->GetGyroController();
+			gyroController->SetPID(p, i, d, f);
+			gyroController->SetSetpoint(setpoint);
+			// gyroController->SetAbsoluteTolerance(5); // DOESN'T WORK
+			
+			if(gyroController->IsEnabled()) {
+				drivebase->SetRightSpeed(-1.0 * gyroController->Get());
+			} else {
+				drivebase->SetRightSpeed(0.0);
+			}
+			
+			bool onTarget = fabs(gyroController->GetSetpoint() - drivebase->GetGyroAngle()) < absoluteTolerance;
+			if(onTarget) {
+				if (timerStopped) {
+					timer->Reset();
+				}
+				timer->Start(); 
+				timerStopped = false;
+				if (timer->Get() > 0.5) {
+					// TODO: instead of disable, set speed to 0 and make it hold its position.
+					gyroController->Disable();
+				}
+			} else {
+				timer->Stop();
+				timerStopped = true;
+			}
+			
+			if(controls->GetRightTrigger()) {
+				drivebase->ResetGyro();
+			}
+			
+			if(controls->GetRightButton(4)) {
+				gyroController->Enable();
+			}
+			if(controls->GetRightButton(5)) {
+				gyroController->Disable();
+			}
+			
+			printf("Setpoint: %f \n", gyroController->GetSetpoint());
+			
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Gyro %f          ", drivebase->GetGyroAngle());
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "L: %f            ", drivebase->GetLeftSpeed());
+			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "R: %f            ", drivebase->GetRightSpeed());
+			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Setpoint: %f    ", gyroController->GetSetpoint());
 			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "P %f I %f", p, i);
 			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "D %f F %f", d, f);
 			dsLCD->UpdateLCD();
@@ -111,18 +159,7 @@ public:
 				d = 0.0;
 				f = 0.0;
 			}
-			
-			if (controls->GetRightButton(4)) {
-				leftEncoderController->Enable();
-				rightEncoderController->Enable();
-			} 
-			if (controls->GetRightButton(5)){
-				leftEncoderController->Disable();
-				rightEncoderController->Disable();
-			}
-
-			printf("PID %s\n", leftEncoderController->IsEnabled() ? "Enabled" : "Disabled");
-			
+	
 			if (controls->GetLeftButton(3)) {
 				p += increment;
 			} else if (controls->GetLeftButton(2)) {
@@ -146,14 +183,6 @@ public:
 			} else if (controls->GetRightButton(8)) {
 				f -= speedIncrement;
 			}
-			
-			leftEncoderController->SetPID(p, i, d);
-			rightEncoderController->SetPID(p, i, d);
-			
-			leftEncoderController->SetSetpoint(setpoint);
-			rightEncoderController->SetSetpoint(setpoint);
-
-			liveWindow->Run();
 		}
 	}
 };
