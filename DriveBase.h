@@ -24,6 +24,9 @@ private:
 	Gyro* m_gyro;
 	
 	PIDController* m_gyroController;
+	
+	Timer* m_timer;
+	bool m_timerStopped;
 
 public:
 	static DriveBase* GetInstance();
@@ -44,12 +47,16 @@ public:
 	void SetEncoderSetpoint(float inches);
 	void EnableEncoderPid();
 	void DisableEncoderPid();
+	bool EncoderPidIsEnabled();
 	
 	void ResetGyro();
 	float GetGyroAngle();
+	void Turn(float setpoint, float tolerance);
 	
-	// TODO: Delete and properly set gyro PID stuff on drivebase.
+	// TODO: REMOVE HACK
 	PIDController* GetGyroController();
+	
+	void DriveStraight(float inches, float tolerance);
 };
 
 #endif
