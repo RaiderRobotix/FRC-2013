@@ -1,6 +1,7 @@
 #include "WPILib.h"
 #include "DriveBase.h"
 #include "Constants.h"
+#include "Math.h"
 
 DriveBase* DriveBase::m_instance = NULL;
 
@@ -36,6 +37,9 @@ DriveBase::DriveBase() {
 	m_gyro->SetSensitivity(GYRO_SENSITIVITY);
 	
 	m_gyroController = new PIDController(0.0, 0.0, 0.0, m_gyro, m_leftDrive);
+	
+	m_timer = new Timer();
+	m_timerStopped = false;
 }
 
 void DriveBase::EnableTeleopControls() {
@@ -102,6 +106,52 @@ float DriveBase::GetGyroAngle() {
 	return m_gyro->GetAngle();
 }
 
-PIDController* DriveBase::GetGyroController() {
-	return m_gyroController;
+/**
+ * Important: Reset the gyro before calling this function.
+ * @param {float} setpoint - The setpoint for the encoders in inches.
+ * @param {float} tolerance - The tolerance for the encoders in inches.
+ */
+void DriveBase::DriveStraight(float setpoint, float tolerance) {
+	if (!m_leftEncoderController->IsEnabled() && !m_rightEncoderController->IsEnabled()) {
+		SetEncoderSetpoint(setpoint);
+		EnableEncoderPid();
+		
+		float angleError = m_gyro->GetAngle();
+		
+		float leftSpeed = m_leftDrive->Get() + (angleError * DRIVE_STRAIGHT_P);
+		float rightSpeed = m_rightDrive->Get() - (angleError * DRIVE_STRAIGHT_P);
+		
+		if (leftSpeed > 1.0) {
+			leftSpeed = 1.0;
+		} else if (leftSpeed < -1.0) {
+			leftSpeed = -1.0;
+		}
+		
+		if (rightSpeed > 1.0) {
+			rightSpeed = 1.0;
+		} else if (rightSpeed < -1.0) {
+			rightSpeed = -1.0;
+		}
+		
+		m_leftDrive->Set(leftSpeed);
+		m_rightDrive->Set(rightSpeed);
+		
+		// Determine when to disable PID
+		bool leftOnTarget = fabs(setpoint - m_leftEncoder->Get()) < tolerance;
+		bool rightOnTarget = fabs(setpoint - m_rightEncoder->Get()) < tolerance;
+
+		if(leftOnTarget && rightOnTarget) {
+			if (m_timerStopped) {
+				m_timer->Reset();
+			}
+			m_timer->Start();
+			m_timerStopped = false;
+			if (m_timer->Get() > 0.5) {	//TODO: KILL MAGIC NUMBER
+				DisableEncoderPid();
+			}
+		} else {
+			m_timer->Stop();
+			m_timerStopped = true;
+		}
+	}
 }

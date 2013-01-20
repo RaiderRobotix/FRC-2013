@@ -101,31 +101,10 @@ public:
 				drivebase->ResetGyro();
 			}
 			
-			drivebase->SetEncoderSetpoint(encoderSetpoint);
+			drivebase->DriveStraight(300, 1);
 								
 			if(controls->GetRightButton(4)) {
-				drivebase->EnableEncoderPid();
 				
-				// Do corrective stuff to stay straight
-				float  error = drivebase->GetGyroAngle();
-				
-				float leftSpeed = drivebase->GetLeftSpeed() + (error * p);
-				float rightSpeed = drivebase->GetRightSpeed() - (error * p);
-				
-				if (leftSpeed > 1.0) {
-					leftSpeed = 1.0;
-				} else if (leftSpeed < -1.0) {
-					leftSpeed = -1.0;
-				}
-				
-				if (rightSpeed > 1.0) {
-					rightSpeed = 1.0;
-				} else if (rightSpeed < -1.0) {
-					rightSpeed = -1.0;
-				}
-				
-				drivebase->SetLeftSpeed(leftSpeed);
-				drivebase->SetRightSpeed(rightSpeed);
 			}
 			if(controls->GetRightButton(5)) {
 				drivebase->DisableEncoderPid();

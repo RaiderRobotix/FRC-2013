@@ -24,6 +24,9 @@ private:
 	Gyro* m_gyro;
 	
 	PIDController* m_gyroController;
+	
+	Timer* m_timer;
+	bool m_timerStopped;
 
 public:
 	static DriveBase* GetInstance();
@@ -48,8 +51,7 @@ public:
 	void ResetGyro();
 	float GetGyroAngle();
 	
-	// TODO: Delete and properly set gyro PID stuff on drivebase.
-	PIDController* GetGyroController();
+	void DriveStraight(float inches, float tolerance);
 };
 
 #endif
