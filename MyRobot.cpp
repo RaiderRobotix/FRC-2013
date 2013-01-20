@@ -16,6 +16,8 @@ class RobotDemo : public SimpleRobot
 	
 	DriverStationLCD* dsLCD; 
 	DriverStation* driverStation;
+	
+	Timer* timer;
 
 public:
 	RobotDemo(void)
@@ -25,6 +27,8 @@ public:
 		
 		dsLCD = DriverStationLCD::GetInstance();
 		driverStation = DriverStation::GetInstance();
+		
+		timer = new Timer();
 		
 		GetWatchdog().Kill();
 	}
@@ -75,8 +79,11 @@ public:
 	void Test() {
 		float p = 0.1;
 		float encoderSetpoint = 300.0;
-		float distanceIncrement = 0.001;
+		float turnSetpoint = 90.0;
+		float distanceIncrement = 0.01;
 		float increment = 0.00001;
+		
+		bool timerStopped = false;
 		
 		while (IsTest() && IsEnabled()) {
 			
@@ -99,6 +106,52 @@ public:
 				drivebase->ResetGyro();
 			}
 			
+
+			
+			// Controls for gyro
+			PIDController* gyroController = drivebase->GetGyroController();
+			gyroController->SetPID(GYRO_P, GYRO_I, GYRO_D);
+			gyroController->SetSetpoint(turnSetpoint);
+			
+			if(gyroController->IsEnabled()) {
+				drivebase->SetRightSpeed(-1.0 * gyroController->Get());
+			} else if (!gyroController->IsEnabled() && !drivebase->EncoderPidIsEnabled()) {
+				drivebase->SetRightSpeed(0.0);
+			}
+
+			bool onTarget = fabs(gyroController->GetSetpoint() - drivebase->GetGyroAngle()) < 2.0;
+			if(onTarget) {
+				if (timerStopped) {
+					timer->Reset();
+				}
+				timer->Start();
+				timerStopped = false;
+				if (timer->Get() > 0.5) {
+					// TODO: instead of disable, set speed to 0 and make it hold its position.
+					gyroController->Disable();
+				}
+			} else {
+				timer->Stop();
+				timerStopped = true;
+			}
+			
+			if (controls->GetRightButton(4)) {
+				gyroController->Enable();
+			}
+			if (controls->GetRightButton(5)) {
+				gyroController->Disable();
+				//drivebase->Turn(turnSetpoint, 2);
+			}
+			
+			drivebase->SetEncoderSetpoint(encoderSetpoint);
+			
+			if (controls->GetLeftButton(4)) {
+				drivebase->EnableEncoderPid();
+			}
+			if (controls->GetLeftButton(5)) {
+				drivebase->DisableEncoderPid();
+			}
+			
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
 			
@@ -106,7 +159,7 @@ public:
 			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Gyro %f     ", drivebase->GetGyroAngle());
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "L: %f R: %f     ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "p: %f    ",  p);
-			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "setpoint: %d        ", encoderSetpoint);
+			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "setpoint: %f        ", encoderSetpoint);
 			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "                 ");
 			
 			dsLCD->UpdateLCD();

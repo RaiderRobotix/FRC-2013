@@ -47,9 +47,14 @@ public:
 	void SetEncoderSetpoint(float inches);
 	void EnableEncoderPid();
 	void DisableEncoderPid();
+	bool EncoderPidIsEnabled();
 	
 	void ResetGyro();
 	float GetGyroAngle();
+	void Turn(float setpoint, float tolerance);
+	
+	// TODO: REMOVE HACK
+	PIDController* GetGyroController();
 	
 	void DriveStraight(float inches, float tolerance);
 };

@@ -37,6 +37,7 @@ DriveBase::DriveBase() {
 	m_gyro->SetSensitivity(GYRO_SENSITIVITY);
 	
 	m_gyroController = new PIDController(0.0, 0.0, 0.0, m_gyro, m_leftDrive);
+	m_gyroController->SetPID(GYRO_P, GYRO_I, GYRO_D);
 	
 	m_timer = new Timer();
 	m_timerStopped = false;
@@ -98,12 +99,56 @@ void DriveBase::DisableEncoderPid() {
 	m_rightEncoderController->Disable();
 }
 
+bool DriveBase::EncoderPidIsEnabled() {
+	return m_leftEncoderController->IsEnabled() && m_rightEncoderController->IsEnabled();
+}
+
 void DriveBase::ResetGyro() {
 	m_gyro->Reset();
 }
 
 float DriveBase::GetGyroAngle() {
 	return m_gyro->GetAngle();
+}
+
+/**
+ * TODO: Logic in Turn and Drive Straight needs to be fixed because the code is not actually being run for the corrections.
+ * 
+ * Chat with Bharat:
+ * Turn() should return a boolean - true when it is done (robot has turned), false otherwise.
+ * set a flag on DriveBase, m_isTurning. 
+ * when !m_turning: set setpoint, enable PID, set m_turning to true.
+ * then outside of that check for the flag, logic for timing when to stop
+ * Inside logoic to stop, (within tolerance), disable PID, set m_isTurning to false, and return true;
+ */
+void DriveBase::Turn(float setpoint, float tolerance) {
+	if(!m_gyroController->IsEnabled()) {
+		m_gyroController->SetSetpoint(setpoint);
+		m_gyroController->Enable();
+		
+		m_rightDrive->Set(-1.0 * m_gyroController->Get());
+
+		bool onTarget = fabs(setpoint - m_gyro->GetAngle()) < tolerance;
+
+		if(onTarget) {
+			if (m_timerStopped) {
+				m_timer->Reset();
+			}
+			m_timer->Start();
+			m_timerStopped = false;
+			if (m_timer->Get() > 0.5) {	//TODO: KILL MAGIC NUMBER
+				m_gyroController->Disable();
+				m_timer->Reset();
+			}
+		} else {
+			m_timer->Stop();
+			m_timerStopped = true;
+		}
+	}
+}
+
+PIDController* DriveBase::GetGyroController() {
+	return m_gyroController;
 }
 
 /**
@@ -148,6 +193,7 @@ void DriveBase::DriveStraight(float setpoint, float tolerance) {
 			m_timerStopped = false;
 			if (m_timer->Get() > 0.5) {	//TODO: KILL MAGIC NUMBER
 				DisableEncoderPid();
+				m_timer->Reset();
 			}
 		} else {
 			m_timer->Stop();
