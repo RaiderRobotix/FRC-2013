@@ -73,14 +73,12 @@ public:
 	 * Runs during test mode
 	 */
 	void Test() {
-		float p = 0.1;		
-		int encoderSetpoint = 300;
-		int distanceIncrement = 1;
+		float p = 0.1;
+		float encoderSetpoint = 300.0;
+		float distanceIncrement = 0.001;
 		float increment = 0.00001;
 		
 		while (IsTest() && IsEnabled()) {
-			// Comment out teleop controls to test PID
-			// drivebase->EnableTeleopControls();
 			
 			if (controls->GetLeftButton(3)) {
 				p += increment;
@@ -99,15 +97,6 @@ public:
 			if(controls->GetLeftTrigger()) {
 				drivebase->ResetEncoders();
 				drivebase->ResetGyro();
-			}
-			
-			drivebase->DriveStraight(300, 1);
-								
-			if(controls->GetRightButton(4)) {
-				
-			}
-			if(controls->GetRightButton(5)) {
-				drivebase->DisableEncoderPid();
 			}
 			
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
