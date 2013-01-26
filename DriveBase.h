@@ -25,6 +25,8 @@ private:
 	
 	PIDController* m_gyroController;
 	
+	bool m_isTurning;
+	
 	Timer* m_timer;
 	bool m_timerStopped;
 
@@ -51,7 +53,10 @@ public:
 	
 	void ResetGyro();
 	float GetGyroAngle();
-	void Turn(float setpoint, float tolerance);
+	bool Turn(float setpoint, float tolerance);
+	bool IsTurning();
+	void EnableGyroPid();
+	void DisableGyroPid();
 	
 	// TODO: REMOVE HACK
 	PIDController* GetGyroController();
