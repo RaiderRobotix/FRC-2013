@@ -26,6 +26,7 @@ private:
 	PIDController* m_gyroController;
 	
 	bool m_isTurning;
+	bool m_isDrivingStraight;
 	
 	Timer* m_timer;
 	bool m_timerStopped;
@@ -61,7 +62,7 @@ public:
 	// TODO: REMOVE HACK
 	PIDController* GetGyroController();
 	
-	void DriveStraight(float inches, float tolerance);
+	bool DriveStraight(float inches, float tolerance);
 };
 
 #endif

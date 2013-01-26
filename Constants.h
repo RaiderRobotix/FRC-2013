@@ -32,7 +32,7 @@ static const float GYRO_I = -0.003;
 static const float GYRO_D = -0.05;
 
 // DRIVE STRAIGHT
-static const float DRIVE_STRAIGHT_P = 0.2;
+static const float DRIVE_STRAIGHT_P = 0.001;
 
 // Encoders are geared at a 1:1 ratio.
 // TODO: Configuration for left and right sides of drivetrain.

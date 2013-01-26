@@ -1,4 +1,5 @@
 #include "WPILib.h"
+#include "HelperFunctions.h"
 #include "DriveBase.h"
 #include "Constants.h"
 #include "Math.h"
@@ -40,6 +41,7 @@ DriveBase::DriveBase() {
 	m_gyroController->SetPID(GYRO_P, GYRO_I, GYRO_D);
 	
 	m_isTurning = false;
+	m_isDrivingStraight = false;
 	
 	m_timer = new Timer();
 	m_timerStopped = false;
@@ -139,10 +141,10 @@ bool DriveBase::Turn(float setpoint, float tolerance) {
 			m_timerStopped = false;
 			
 			// On Target
-			if (m_timer->Get() > 0.5) {	//TODO: KILL MAGIC NUMBER
+			if (m_timer->Get() > 0.25) {	//TODO: KILL MAGIC NUMBER
 				m_gyroController->Disable();
 				m_timer->Reset();
-				m_isTurning = true;
+				m_isTurning = false;
 				return true;
 			}
 		} else {
@@ -175,11 +177,18 @@ PIDController* DriveBase::GetGyroController() {
  * @param {float} setpoint - The setpoint for the encoders in inches.
  * @param {float} tolerance - The tolerance for the encoders in inches.
  */
-void DriveBase::DriveStraight(float setpoint, float tolerance) {
-	if (!m_leftEncoderController->IsEnabled() && !m_rightEncoderController->IsEnabled()) {
+bool DriveBase::DriveStraight(float setpoint, float tolerance) {
+	if (!m_isDrivingStraight) {
 		SetEncoderSetpoint(setpoint);
 		EnableEncoderPid();
+		m_rightDrive->Set(m_leftEncoderController->Get());
 		
+		// TODO: Get rid of reset Gyro?
+		m_gyro->Reset();
+		m_isDrivingStraight = true;
+	}
+	
+	if (m_isDrivingStraight) {
 		float angleError = m_gyro->GetAngle();
 		
 		float leftSpeed = m_leftDrive->Get() + (angleError * DRIVE_STRAIGHT_P);
@@ -201,9 +210,17 @@ void DriveBase::DriveStraight(float setpoint, float tolerance) {
 		m_rightDrive->Set(rightSpeed);
 		
 		// Determine when to disable PID
-		bool leftOnTarget = fabs(setpoint - m_leftEncoder->Get()) < tolerance;
-		bool rightOnTarget = fabs(setpoint - m_rightEncoder->Get()) < tolerance;
-
+		bool leftOnTarget = fabs(setpoint - encoderCountToInches(m_leftEncoder->Get())) < tolerance;
+		bool rightOnTarget = fabs(setpoint - encoderCountToInches(m_rightEncoder->Get())) < tolerance;
+		
+		
+		if (leftOnTarget && rightOnTarget) {
+			DisableEncoderPid();
+			m_isDrivingStraight = false;
+			return true;
+		}
+		
+		/*
 		if(leftOnTarget && rightOnTarget) {
 			if (m_timerStopped) {
 				m_timer->Reset();
@@ -213,10 +230,13 @@ void DriveBase::DriveStraight(float setpoint, float tolerance) {
 			if (m_timer->Get() > 0.5) {	//TODO: KILL MAGIC NUMBER
 				DisableEncoderPid();
 				m_timer->Reset();
+				m_isDrivingStraight = false;
+				return true;
 			}
 		} else {
 			m_timer->Stop();
 			m_timerStopped = true;
-		}
+		}*/
 	}
+	return false;
 }
