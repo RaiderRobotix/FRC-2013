@@ -2,6 +2,7 @@
 #include "DriveBase.h"
 #include "Controls.h"
 #include "HelperFunctions.h"
+#include "AutonController.h"
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -11,6 +12,8 @@
  */ 
 class RobotDemo : public SimpleRobot
 {
+	AutonController* autonController;
+	
 	DriveBase* drivebase;
 	Controls* controls;
 	
@@ -22,6 +25,8 @@ class RobotDemo : public SimpleRobot
 public:
 	RobotDemo(void)
 	{
+		autonController = AutonController::GetInstance();
+		
 		drivebase = DriveBase::GetInstance();
 		controls = Controls::GetInstance();
 		
@@ -38,73 +43,22 @@ public:
 	 */
 	void Autonomous(void)
 	{
-		bool turnComplete = false;
-		bool driveStraightComplete = false;
-		int step = 0;
-		while (IsAutonomous() && IsEnabled()) {
-			
-			float setpoint = 89.0;
-			float tolerance = 3.0;
-			
-			// Print Encoder Distances
+		while (IsAutonomous() && IsEnabled()) 
+		{	
+			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
 			
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
-			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
-			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "On Target: %s     ", driveStraightComplete ? "true" :"false");
-						
+			// For Debug Purposes
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
+			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
+			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f         ", drivebase->GetGyroAngle());
+			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "L: %f R: %f      ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
 			dsLCD->UpdateLCD();
 			
-			/*
-			if (step == 0) {
-				driveStraightComplete = drivebase->DriveStraight(120, 1.0);
-				if (driveStraightComplete) {
-					driveStraightComplete = false;
-					drivebase->ResetEncoders();
-					drivebase->ResetGyro();
-					step++;
-				}
-			} else {
-				drivebase->SetSpeed(0.0);
-			}
-			
-			*/
-			if (step == 0) {
-				driveStraightComplete = drivebase->DriveStraight(setpoint, tolerance);
-				if (driveStraightComplete) {
-					driveStraightComplete = false;
-					drivebase->ResetEncoders();
-					drivebase->ResetGyro();
-					step++;
-				}
-			} else if (step == 1) {
-				turnComplete = drivebase->Turn(80, 2);
-				if(turnComplete) {
-					turnComplete = false;
-					drivebase->ResetEncoders();
-					drivebase->ResetGyro();
-					step++;
-				}
-			} else if (step == 2) {
-				driveStraightComplete = drivebase->DriveStraight(-130, tolerance);
-				if (driveStraightComplete) {
-					driveStraightComplete = false;
-					drivebase->ResetEncoders();
-					drivebase->ResetGyro();
-					step++;
-				}
-			} else if (step == 3) {
-				turnComplete = drivebase->Turn(-105, 2);
-				if(turnComplete) {
-					turnComplete = false;
-					drivebase->ResetEncoders();
-					drivebase->ResetGyro();
-					step++;
-				}
-			} else {
-				drivebase->SetSpeed(0.0);
-			}
+			autonController->Test();
 		}
 	}
 
@@ -115,6 +69,7 @@ public:
 	{
 		while (IsOperatorControl() && IsEnabled())
 		{	
+			autonController->Reset();
 			drivebase->EnableTeleopControls();
 			
 			// Print Encoder Values to Driver station LCD
@@ -130,8 +85,8 @@ public:
 			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
-			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f     ", drivebase->GetGyroAngle());
-			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "L: %f R: %f     ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
+			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f         ", drivebase->GetGyroAngle());
+			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "L: %f R: %f      ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
 			dsLCD->UpdateLCD();
 			
 			// Wait(0.005);
@@ -146,7 +101,7 @@ public:
 		float i = 0.0;
 		float d = 0.0;
 		
-		float encoderSetpoint = 300.0;
+		float encoderSetpoint = 200.0;
 		float turnSetpoint = 90.0;
 		float distanceIncrement = 0.01;
 		float increment = 0.00001;
@@ -226,9 +181,11 @@ public:
 			}
 			
 			drivebase->SetEncoderSetpoint(encoderSetpoint);
+			//drivebase->SetEncoderPID(p,i,d);
 			
 			if (controls->GetLeftButton(4)) {
-				drivebase->EnableEncoderPid();
+				//drivebase->EnableEncoderPid();
+				drivebase->DriveStraight(encoderSetpoint, 2.0, DRIVE_STRAIGHT_P);
 			}
 			if (controls->GetLeftButton(5)) {
 				drivebase->DisableEncoderPid();

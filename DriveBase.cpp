@@ -168,8 +168,19 @@ void DriveBase::DisableGyroPid() {
 	m_gyroController->Disable();
 }
 
+void DriveBase::SetGyroSetpoint(float angle) {
+	m_gyroController->SetSetpoint(angle);
+}
+
+// TODO: REMOVE
 PIDController* DriveBase::GetGyroController() {
 	return m_gyroController;
+}
+
+// TODO: REMOVE
+void DriveBase::SetEncoderPID(float p, float i, float d) {
+	m_leftEncoderController->SetPID(p,i,d);
+	m_rightEncoderController->SetPID(p,i,d);
 }
 
 /**
@@ -177,7 +188,7 @@ PIDController* DriveBase::GetGyroController() {
  * @param {float} setpoint - The setpoint for the encoders in inches.
  * @param {float} tolerance - The tolerance for the encoders in inches.
  */
-bool DriveBase::DriveStraight(float setpoint, float tolerance) {
+bool DriveBase::DriveStraight(float setpoint, float tolerance, float p) {
 	if (!m_isDrivingStraight) {
 		SetEncoderSetpoint(setpoint);
 		EnableEncoderPid();
@@ -191,8 +202,8 @@ bool DriveBase::DriveStraight(float setpoint, float tolerance) {
 	if (m_isDrivingStraight) {
 		float angleError = m_gyro->GetAngle();
 		
-		float leftSpeed = m_leftDrive->Get() + (angleError * DRIVE_STRAIGHT_P);
-		float rightSpeed = m_rightDrive->Get() - (angleError * DRIVE_STRAIGHT_P);
+		float leftSpeed = m_leftDrive->Get() + (angleError * p);
+		float rightSpeed = m_rightDrive->Get() - (angleError * p);
 		
 		if (leftSpeed > 1.0) {
 			leftSpeed = 1.0;

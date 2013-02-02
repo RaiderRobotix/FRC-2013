@@ -58,11 +58,13 @@ public:
 	bool IsTurning();
 	void EnableGyroPid();
 	void DisableGyroPid();
+	void SetGyroSetpoint(float angle);
 	
 	// TODO: REMOVE HACK
 	PIDController* GetGyroController();
+	void SetEncoderPID(float p, float i, float d);
 	
-	bool DriveStraight(float inches, float tolerance);
+	bool DriveStraight(float inches, float tolerance, float p);
 };
 
 #endif
