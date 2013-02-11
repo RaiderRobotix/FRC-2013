@@ -23,6 +23,7 @@ public:
 	void Reset();
 	
 	void Test();
+	void DoNothing();
 };
 
 #endif

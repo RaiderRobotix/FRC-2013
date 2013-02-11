@@ -21,6 +21,10 @@ AutonController::AutonController() {
 	m_step = 0;
 }
 
+void AutonController::Reset() {
+	m_step = 0;
+}
+
 void AutonController::Test() {
 	
 	float turnTolerance = 2.0;
@@ -77,6 +81,7 @@ void AutonController::Test() {
 	}
 }
 
-void AutonController::Reset() {
-	m_step = 0;
+void AutonController::DoNothing() {
+	drivebase->SetSpeed(0.0);
+	// TODO: Make other components do nothing.
 }

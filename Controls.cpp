@@ -14,6 +14,7 @@ Controls* Controls::GetInstance() {
 Controls::Controls() {
 	m_leftStick = new Joystick(LEFT_JOYSTICK_PORT);
 	m_rightStick = new Joystick(RIGHT_JOYSTICK_PORT);
+	m_shooterStick = new Joystick(SHOOTER_JOYSTICK_PORT);
 }
 
 float Controls::GetLeftY() {
@@ -38,4 +39,8 @@ bool Controls::GetLeftButton(int button) {
 
 bool Controls::GetRightButton(int button) {
 	return m_rightStick->GetRawButton(button);
+}
+
+bool Controls::GetShooterButton(int button) {
+	return m_shooterStick->GetRawButton(button);
 }

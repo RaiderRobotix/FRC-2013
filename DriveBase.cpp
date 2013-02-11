@@ -17,8 +17,8 @@ DriveBase::DriveBase() {
 	m_controls = Controls::GetInstance();
 	
 	// Remember to change these to Talons
-	m_leftDrive = new Victor(LEFT_DRIVE_PWM);
-	m_rightDrive = new Victor(RIGHT_DRIVE_PWM);
+	m_leftDrive = new Talon(LEFT_DRIVE_PWM);
+	m_rightDrive = new Talon(RIGHT_DRIVE_PWM);
 
 	// Encoders
 	m_leftEncoder = new Encoder(LEFT_ENCODER_A, LEFT_ENCODER_B);
@@ -48,7 +48,7 @@ DriveBase::DriveBase() {
 }
 
 void DriveBase::EnableTeleopControls() {
-	m_leftDrive->Set(m_controls->GetLeftY());
+	m_leftDrive->Set(-1*m_controls->GetLeftY());
 	m_rightDrive->Set(m_controls->GetRightY());
 }
 

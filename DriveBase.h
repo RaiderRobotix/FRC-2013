@@ -11,9 +11,8 @@ private:
 	
 	Controls* m_controls;
 	
-	// These Victors should be changed to Talons for the actual robot
-	Victor* m_leftDrive;
-	Victor* m_rightDrive;
+	Talon* m_leftDrive;
+	Talon* m_rightDrive;
 	
 	Encoder* m_leftEncoder;
 	Encoder* m_rightEncoder;

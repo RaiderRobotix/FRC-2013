@@ -1,5 +1,8 @@
 #include "WPILib.h"
 #include "DriveBase.h"
+#include "Pickup.h"
+#include "Shooter.h"
+#include "Climber.h"
 #include "Controls.h"
 #include "HelperFunctions.h"
 #include "AutonController.h"
@@ -15,12 +18,16 @@ class RobotDemo : public SimpleRobot
 	AutonController* autonController;
 	
 	DriveBase* drivebase;
+	Pickup* pickup;
+	Shooter* shooter;
 	Controls* controls;
 	
 	DriverStationLCD* dsLCD; 
 	DriverStation* driverStation;
 	
 	Timer* timer;
+	
+	SendableChooser *autonSelector;
 
 public:
 	RobotDemo(void)
@@ -28,12 +35,21 @@ public:
 		autonController = AutonController::GetInstance();
 		
 		drivebase = DriveBase::GetInstance();
+		pickup = Pickup::GetInstance();
+		shooter = Shooter::GetInstance();
 		controls = Controls::GetInstance();
 		
 		dsLCD = DriverStationLCD::GetInstance();
 		driverStation = DriverStation::GetInstance();
 		
 		timer = new Timer();
+		
+		autonSelector = new SendableChooser();
+		autonSelector->AddObject("Test", (void*)1);
+		autonSelector->AddDefault("Do Nothing", (void*)0);
+		
+		SmartDashboard::init();
+		SmartDashboard::PutData("Autonomous Mode", autonSelector);
 		
 		GetWatchdog().Kill();
 	}
@@ -43,8 +59,15 @@ public:
 	 */
 	void Autonomous(void)
 	{
+		int selectedAutoMode = (int)(autonSelector->GetSelected());
+		
 		while (IsAutonomous() && IsEnabled()) 
 		{	
+			switch (selectedAutoMode) {
+				case 0: autonController->DoNothing(); break;
+				case 1: autonController->Test(); break;
+			}
+			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
@@ -55,10 +78,9 @@ public:
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f         ", drivebase->GetGyroAngle());
-			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "L: %f R: %f      ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
+			//dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "L: %f R: %f      ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
+			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "Auto: %d            ", (int)(autonSelector->GetSelected()));
 			dsLCD->UpdateLCD();
-			
-			autonController->Test();
 		}
 	}
 
@@ -71,6 +93,8 @@ public:
 		{	
 			autonController->Reset();
 			drivebase->EnableTeleopControls();
+			pickup->EnableTeleopControls();
+			shooter->EnableTeleopControls();
 			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();

@@ -166,6 +166,10 @@ SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/AutonController.o : $(P
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
 
 
+SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Climber.o : $(PRJ_ROOT_DIR)/Climber.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
+
+
 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Controls.o : $(PRJ_ROOT_DIR)/Controls.cpp $(FORCE_FILE_BUILD)
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
 
@@ -178,10 +182,21 @@ SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/MyRobot.o : $(PRJ_ROOT_
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
 
 
+SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Pickup.o : $(PRJ_ROOT_DIR)/Pickup.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
+
+
+SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Shooter.o : $(PRJ_ROOT_DIR)/Shooter.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
+
+
 OBJECTS_SimpleTemplate_partialImage = SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/AutonController.o \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Climber.o \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Controls.o \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/DriveBase.o \
-	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/MyRobot.o
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/MyRobot.o \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Pickup.o \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Shooter.o
 
 SimpleTemplate_partialImage/$(MODE_DIR)/SimpleTemplate_partialImage.o : $(OBJECTS_SimpleTemplate_partialImage)
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc -r -nostdlib -Wl,-X  -o "$@" $(OBJECTS_SimpleTemplate_partialImage) $(LIBPATH) $(LIBS) $(ADDED_LIBPATH) $(ADDED_LIBS)  && if [ "$(EXPAND_DBG)" = "1" ]; then plink "$@";fi
@@ -195,8 +210,9 @@ SimpleTemplate_partialImage/$(MODE_DIR)/SimpleTemplate_partialImage_clean :
 
 force : 
 
-DEP_FILES := SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/AutonController.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Controls.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/DriveBase.d \
-	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/MyRobot.d
+DEP_FILES := SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/AutonController.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Climber.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Controls.d \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/DriveBase.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/MyRobot.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Pickup.d \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/FRC-2013/Shooter.d
 -include $(DEP_FILES)
 
 

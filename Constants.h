@@ -6,10 +6,16 @@
 static const int LEFT_DRIVE_PWM = 1;
 static const int RIGHT_DRIVE_PWM = 2;
 
+static const int PICKUP_PWM = 4;
+
+static const int SHOOTER_BAG_PWM = 5;
+static const int SHOOTER_775_PWM = 8;
+
 // CONTROLS
 
 static const int LEFT_JOYSTICK_PORT = 1;
 static const int RIGHT_JOYSTICK_PORT = 2;
+static const int SHOOTER_JOYSTICK_PORT = 3;
 
 // SENSORS
 

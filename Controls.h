@@ -10,6 +10,7 @@ private:
 	Joystick* m_leftStick;
 	Joystick* m_rightStick;
 
+	Joystick* m_shooterStick;
 public:
 	static Controls* GetInstance();
 	Controls();
@@ -23,5 +24,6 @@ public:
 	bool GetRightTrigger();
 	bool GetLeftButton(int button);
 	bool GetRightButton(int button);
+	bool GetShooterButton(int button);
 };
 #endif
