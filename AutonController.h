@@ -3,6 +3,7 @@
 
 #include "WPILib.h"
 #include "DriveBase.h"
+#include "Shooter.h"
 
 class AutonController {
 	
@@ -10,6 +11,7 @@ private:
 	static AutonController* m_instance;
 	
 	DriveBase* drivebase;
+	Shooter* shooter;
 	
 	bool m_turnComplete;
 	bool m_driveStraightComplete;
@@ -23,6 +25,10 @@ public:
 	void Reset();
 	
 	void Test();
+	
+	void CliffDey();
+	void JimTheWelder();
+	
 	void DoNothing();
 };
 

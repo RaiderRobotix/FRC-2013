@@ -1,6 +1,11 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+// PNEUMATICS
+
+static const int COMPRESSOR_RELAY_CHAN = 1;
+static const int PRESSURE_SWITCH_CHAN = 14;
+
 // MOTORS
 
 static const int LEFT_DRIVE_PWM = 1;
@@ -19,12 +24,12 @@ static const int SHOOTER_JOYSTICK_PORT = 3;
 
 // SENSORS
 
-static const int LEFT_ENCODER_A = 11;
-static const int LEFT_ENCODER_B = 12;
-static const int RIGHT_ENCODER_A = 13;
-static const int RIGHT_ENCODER_B = 14;
+static const int LEFT_ENCODER_A = 1;
+static const int LEFT_ENCODER_B = 2;
+static const int RIGHT_ENCODER_A = 3;
+static const int RIGHT_ENCODER_B = 4;
 
-static const int GYRO_CHANNEL = 2;
+static const int GYRO_CHANNEL = 1;
 static const float GYRO_SENSITIVITY = 0.007; // 7 mV/deg/sec
 
 // ENCODER PID
@@ -33,9 +38,9 @@ static const float ENCODER_I = 0.0;
 static const float ENCODER_D = 0.016;
 
 // GYRO PID
-static const float GYRO_P = -0.03;
-static const float GYRO_I = -0.003;
-static const float GYRO_D = -0.05;
+static const float GYRO_P = 0.013022;
+static const float GYRO_I = 0.0;
+static const float GYRO_D = 0.002116;
 
 // DRIVE STRAIGHT
 static const float DRIVE_STRAIGHT_P = 0.002;

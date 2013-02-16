@@ -11,12 +11,10 @@ private:
 	Joystick* m_rightStick;
 
 	Joystick* m_shooterStick;
+	
 public:
 	static Controls* GetInstance();
 	Controls();
-	
-	Joystick* GetLeftStick();
-	Joystick* GetRightStick();
 	
 	float GetLeftY();
 	float GetRightY();
@@ -24,6 +22,9 @@ public:
 	bool GetRightTrigger();
 	bool GetLeftButton(int button);
 	bool GetRightButton(int button);
+	
+	float GetShooterY();
 	bool GetShooterButton(int button);
+	bool GetShooterTrigger();
 };
 #endif

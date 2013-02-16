@@ -41,6 +41,14 @@ bool Controls::GetRightButton(int button) {
 	return m_rightStick->GetRawButton(button);
 }
 
+float Controls::GetShooterY() {
+	return m_shooterStick->GetY();
+}
+
 bool Controls::GetShooterButton(int button) {
 	return m_shooterStick->GetRawButton(button);
+}
+
+bool Controls::GetShooterTrigger() {
+	return m_shooterStick->GetTrigger();
 }

@@ -49,7 +49,7 @@ DriveBase::DriveBase() {
 
 void DriveBase::EnableTeleopControls() {
 	m_leftDrive->Set(-1*m_controls->GetLeftY());
-	m_rightDrive->Set(m_controls->GetRightY());
+	m_rightDrive->Set(-1*m_controls->GetRightY());
 }
 
 void DriveBase::SetSpeed(float speed) {
@@ -129,7 +129,7 @@ bool DriveBase::Turn(float setpoint, float tolerance) {
 	}
 	
 	if (m_isTurning) {
-		m_rightDrive->Set(-1.0 * m_gyroController->Get());
+		m_rightDrive->Set(m_gyroController->Get());
 
 		bool onTarget = fabs(setpoint - m_gyro->GetAngle()) < tolerance;
 
@@ -141,7 +141,7 @@ bool DriveBase::Turn(float setpoint, float tolerance) {
 			m_timerStopped = false;
 			
 			// On Target
-			if (m_timer->Get() > 0.25) {	//TODO: KILL MAGIC NUMBER
+			if (m_timer->Get() > 0.5) {	//TODO: KILL MAGIC NUMBER
 				m_gyroController->Disable();
 				m_timer->Reset();
 				m_isTurning = false;

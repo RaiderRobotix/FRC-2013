@@ -15,15 +15,117 @@ Shooter::Shooter() {
 	m_shooterWheel1 = new Talon(SHOOTER_BAG_PWM);
 	m_shooterWheel2 = new Talon(SHOOTER_775_PWM);
 	
+	m_tiltUp = new Solenoid(5);
+	m_tiltDown = new Solenoid(6);
+	
+	m_bucketUp = new Solenoid(2);
+	m_bucketDown = new Solenoid(1);
+	
+	m_launcherFire = new Solenoid(3);
+	m_launcherStore = new Solenoid(4);
+	
 	m_controls = Controls::GetInstance();
+	m_triggerPressed1 = false;
+	m_triggerPressed2 = false;
+	
+	m_bucketIsUp = true;
+	m_tiltIsUp = false;
+	
+	m_timer = new Timer();
+	m_timerIsRunning = false;
 }
 
 void Shooter::EnableTeleopControls() {
-	if (m_controls->GetShooterButton(10)) { // Shoot
+	if (m_controls->GetShooterTrigger()) { // Shoot
 		m_shooterWheel1->Set(1.0);
 		m_shooterWheel2->Set(1.0);
 	} else {
 		m_shooterWheel1->Set(0.0);
 		m_shooterWheel2->Set(0.0);
 	}
+	
+	// To reset for start of match.
+	if (m_controls->GetLeftTrigger()) {
+		Shoot();
+	}
+	
+	if (m_controls->GetRightTrigger() && m_bucketIsUp) {
+		Shoot();
+		m_timer->Start();
+	}
+	
+	if (m_timer->Get() > 0.15) {
+		m_timer->Stop();
+		m_timer->Reset();
+		Reset();
+	}
+	
+	if (m_controls->GetShooterButton(4)) {
+		Reset();
+	}
+	
+	if (m_controls->GetShooterY() > 0.5) {
+		TiltUp();
+	}
+	
+	if (m_controls->GetShooterY() < -0.5) {
+		TiltDown();
+	}
+	
+	if (m_controls->GetShooterButton(3)) {
+		BucketUp();
+	}
+	
+	if (m_controls->GetShooterButton(2)) {
+		Reset();
+		BucketDown();
+	}
+}
+
+void Shooter::TurnOn() {
+	m_shooterWheel1->Set(1.0);
+	m_shooterWheel2->Set(1.0);
+}
+
+void Shooter::TurnOff() {
+	m_shooterWheel1->Set(0.0);
+	m_shooterWheel2->Set(0.0);
+}
+
+void Shooter::Shoot() {
+	m_launcherFire->Set(true);
+	m_launcherStore->Set(false);
+}
+
+void Shooter::Reset() {
+	m_launcherFire->Set(false);
+	m_launcherStore->Set(true);
+}
+
+void Shooter::TiltUp() {
+	m_tiltUp->Set(true);
+	m_tiltDown->Set(false);
+	
+	m_tiltIsUp = true;
+}
+
+void Shooter::TiltDown() {
+	m_tiltUp->Set(false);
+	m_tiltDown->Set(true);
+	
+	m_tiltIsUp = false;
+}
+
+void Shooter::BucketUp() {
+	m_bucketUp->Set(true);
+	m_bucketDown->Set(false);
+	
+	m_bucketIsUp = true;
+}
+
+void Shooter::BucketDown() {
+	m_bucketUp->Set(false);
+	m_bucketDown->Set(true);
+	
+	m_bucketIsUp = false;;
 }

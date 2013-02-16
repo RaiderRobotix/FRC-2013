@@ -13,6 +13,7 @@ AutonController* AutonController::GetInstance() {
 
 AutonController::AutonController() {
 	drivebase = DriveBase::GetInstance();
+	shooter = Shooter::GetInstance();
 	
 	m_turnComplete = false;
 	m_driveStraightComplete = false;
@@ -29,20 +30,6 @@ void AutonController::Test() {
 	
 	float turnTolerance = 2.0;
 	float driveStraightTolerance = 3.0;
-	
-	/*
-	if (step == 0) {
-		m_driveStraightComplete = drivebase->DriveStraight(120, 1.0);
-		if (m_driveStraightComplete) {
-			m_driveStraightComplete = false;
-			drivebase->ResetEncoders();
-			drivebase->ResetGyro();
-			step++;
-		}
-	} else {
-		drivebase->SetSpeed(0.0);
-	}
-	*/
 	
 	if (m_step == 0) {
 		m_driveStraightComplete = drivebase->DriveStraight(89.0, driveStraightTolerance, DRIVE_STRAIGHT_P);
@@ -78,6 +65,99 @@ void AutonController::Test() {
 		}
 	} else {
 		drivebase->SetSpeed(0.0);
+	}
+}
+
+/**
+ * Sit and shoot three from the back of the pyramid.
+ * Grab the discs under the pyramid.
+ */
+void AutonController::CliffDey() {
+	if (m_step == 0) {
+		shooter->Reset();
+		shooter->TurnOn();
+		
+		m_timer->Start();
+		m_timer->Reset();
+		m_step++;
+	} else if (m_step == 1) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 2) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 3) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else {
+		shooter->TurnOff();
+	}
+}
+
+/**
+ * Shoot three from the back of the pyramid
+ */
+void AutonController::JimTheWelder() {
+	if (m_step == 0) {
+		shooter->Reset();
+		shooter->TurnOn();
+		
+		m_timer->Start();
+		m_timer->Reset();
+		m_step++;
+	} else if (m_step == 1) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 2) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 3) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 4) {
+		
+	} else {
+		shooter->TurnOff();
 	}
 }
 

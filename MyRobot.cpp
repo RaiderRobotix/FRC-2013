@@ -22,6 +22,9 @@ class RobotDemo : public SimpleRobot
 	Shooter* shooter;
 	Controls* controls;
 	
+	Relay* compressor;
+	DigitalInput* pressureSwitch;
+	
 	DriverStationLCD* dsLCD; 
 	DriverStation* driverStation;
 	
@@ -38,6 +41,9 @@ public:
 		pickup = Pickup::GetInstance();
 		shooter = Shooter::GetInstance();
 		controls = Controls::GetInstance();
+		
+		compressor = new Relay(COMPRESSOR_RELAY_CHAN, Relay::kForwardOnly);
+		pressureSwitch = new DigitalInput(PRESSURE_SWITCH_CHAN);
 		
 		dsLCD = DriverStationLCD::GetInstance();
 		driverStation = DriverStation::GetInstance();
@@ -59,14 +65,18 @@ public:
 	 */
 	void Autonomous(void)
 	{
+		compressor->Set(Relay::kOff);
 		int selectedAutoMode = (int)(autonSelector->GetSelected());
 		
 		while (IsAutonomous() && IsEnabled()) 
 		{	
+			/*
 			switch (selectedAutoMode) {
 				case 0: autonController->DoNothing(); break;
 				case 1: autonController->Test(); break;
-			}
+			}*/
+			
+			autonController->CliffDey();
 			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
@@ -96,6 +106,13 @@ public:
 			pickup->EnableTeleopControls();
 			shooter->EnableTeleopControls();
 			
+			// Pneumatics
+			if(pressureSwitch->Get() == 1){
+				compressor->Set(Relay::kOff);
+			} else {
+				compressor->Set(Relay::kOn);
+			}
+			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
@@ -110,7 +127,8 @@ public:
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f         ", drivebase->GetGyroAngle());
-			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "L: %f R: %f      ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
+			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "PSwitch: %d      ",  pressureSwitch->Get());
+			//dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "L: %f R: %f      ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
 			dsLCD->UpdateLCD();
 			
 			// Wait(0.005);
@@ -125,10 +143,15 @@ public:
 		float i = 0.0;
 		float d = 0.0;
 		
-		float encoderSetpoint = 200.0;
-		float turnSetpoint = 90.0;
+		// Test Gyro PID
+		//float p = 0.013022;
+		//float i = 0.0;
+		//float d = 0.002116;
+		
+		float encoderSetpoint = 100.0;
+		float turnSetpoint = 45.0;
 		float distanceIncrement = 0.01;
-		float increment = 0.00001;
+		float increment = 0.000001;
 		
 		bool timerStopped = false;
 		
@@ -169,13 +192,14 @@ public:
 			
 			// Controls for gyro
 			PIDController* gyroController = drivebase->GetGyroController();
-			gyroController->SetPID(p, i, d);
+			//gyroController->SetPID(p, i, d);
 			
 			//gyroController->SetPID(GYRO_P, GYRO_I, GYRO_D);
 			gyroController->SetSetpoint(turnSetpoint);
 			
 			if(gyroController->IsEnabled()) {
-				drivebase->SetRightSpeed(-1.0 * gyroController->Get());
+				drivebase->SetRightSpeed(gyroController->Get());
+				
 			} else if (!gyroController->IsEnabled() && !drivebase->EncoderPidIsEnabled()) {
 				drivebase->SetRightSpeed(0.0);
 			}
@@ -187,8 +211,10 @@ public:
 				}
 				timer->Start();
 				timerStopped = false;
-				if (timer->Get() > 0.5) {
+				if (timer->Get() > 0.50) {
 					// TODO: instead of disable, set speed to 0 and make it hold its position.
+					dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Gyro: DONE             ");
+					dsLCD->UpdateLCD();
 					gyroController->Disable();
 				}
 			} else {
@@ -205,7 +231,7 @@ public:
 			}
 			
 			drivebase->SetEncoderSetpoint(encoderSetpoint);
-			//drivebase->SetEncoderPID(p,i,d);
+			drivebase->SetEncoderPID(p,i,d);
 			
 			if (controls->GetLeftButton(4)) {
 				//drivebase->EnableEncoderPid();
