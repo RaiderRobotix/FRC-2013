@@ -175,7 +175,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 4) {
-		pickup->TurnOn();
+		pickup->TurnOn(0.4);
 		shooter->BucketDown();
 		shooter->TurnOff();
 		m_step++;
@@ -189,7 +189,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 6) {
-		m_turnComplete = drivebase->Turn(-61, 5.0);
+		m_turnComplete = drivebase->Turn(-55, 5.0, 0.45);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -205,7 +205,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 8) {
-		m_turnComplete = drivebase->Turn(90.0, 12.0, 0.8);
+		m_turnComplete = drivebase->Turn(90.0, 12.0, 0.45); // max speed was 0.8 for old Turn function
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -243,7 +243,11 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else {
-		shooter->TurnOff();
+		if (m_timer->Get() > 3.0) {
+			shooter->TurnOff();
+			m_timer->Stop();
+			m_timer->Reset();
+		}
 		drivebase->SetSpeed(0.0);
 	}
 }

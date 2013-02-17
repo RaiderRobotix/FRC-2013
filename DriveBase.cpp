@@ -121,6 +121,7 @@ float DriveBase::GetGyroAngle() {
  * 
  * @return True if turn has completed, false otherwise.
  */
+/*
 bool DriveBase::Turn(float setpoint, float tolerance, float maxSpeed) {
 	if (!m_isTurning) {
 		m_gyroController->SetOutputRange(-1.0, maxSpeed);
@@ -154,6 +155,31 @@ bool DriveBase::Turn(float setpoint, float tolerance, float maxSpeed) {
 		}
 	}
 	
+	return false;
+} */
+
+/**
+ * Turn using dead reckoning and the gyro to know when to stop.
+ */
+bool DriveBase::Turn(float setpoint, float tolerance, float maxSpeed) {
+	if (!m_isTurning) {
+		if (setpoint > 0 ) {
+			m_leftDrive->Set(maxSpeed);
+			m_rightDrive->Set(-1.0 * maxSpeed);
+		} else if (setpoint < 0) {
+			m_leftDrive->Set(-1.0 * maxSpeed);
+			m_rightDrive->Set(maxSpeed);
+		} 
+		m_isTurning = true;
+	}
+	
+	if (m_isTurning) {
+		if ((setpoint > 0 && m_gyro->GetAngle() > setpoint) || (setpoint < 0 && m_gyro->GetAngle() < setpoint)) {
+			SetSpeed(0.0);
+			m_isTurning = false;
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -241,7 +267,7 @@ bool DriveBase::DriveStraight(float setpoint, float tolerance, float p, float ma
 			m_isDrivingStraight = false;
 			return true;
 		}*/
-		if (encoderCountToInches(m_leftEncoder->Get()) >= setpoint) {
+		if ((encoderCountToInches(m_leftEncoder->Get()) >= setpoint) || (encoderCountToInches(m_rightEncoder->Get()) >= setpoint)) {
 			DisableEncoderPid();
 			m_isDrivingStraight = false;
 			return true;
