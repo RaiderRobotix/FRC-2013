@@ -138,7 +138,7 @@ void AutonController::JimTheWelder() {
 	printf("Auton Step: %d \n", m_step);
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn();
+		shooter->TurnOn(0.85);
 		drivebase->ResetGyro();
 		drivebase->ResetEncoders();
 		
@@ -175,7 +175,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 4) {
-		pickup->TurnOn(0.4);
+		pickup->TurnOn(0.7);
 		shooter->BucketDown();
 		shooter->TurnOff();
 		m_step++;
@@ -197,7 +197,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 7) {
-		m_driveStraightComplete = drivebase->DriveStraight(48, 2.0, 0.0002, 0.5);
+		m_driveStraightComplete = drivebase->DriveStraight(63, 2.0, 0.0002, 0.5);
 		if (m_driveStraightComplete) {
 			m_driveStraightComplete = false;
 			drivebase->ResetEncoders();
@@ -205,7 +205,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 8) {
-		m_turnComplete = drivebase->Turn(90.0, 12.0, 0.45); // max speed was 0.8 for old Turn function
+		m_turnComplete = drivebase->Turn(90.0, 12.0, 0.55); 
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -216,7 +216,7 @@ void AutonController::JimTheWelder() {
 		m_driveStraightComplete = drivebase->DriveStraight(48, 2.0, 0.0002, 0.5);
 		shooter->BucketUp();
 		shooter->TiltUp();
-		shooter->TurnOn();
+		shooter->TurnOn(0.85);
 		if (m_driveStraightComplete) {
 			m_driveStraightComplete = false;
 			drivebase->ResetEncoders();

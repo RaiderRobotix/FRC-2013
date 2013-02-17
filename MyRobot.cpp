@@ -65,7 +65,7 @@ public:
 	 */
 	void Autonomous(void)
 	{
-		compressor->Set(Relay::kOff);
+		compressor->Set(Relay::kOn);
 		int selectedAutoMode = (int)(autonSelector->GetSelected());
 		
 		while (IsAutonomous() && IsEnabled()) 
@@ -76,10 +76,10 @@ public:
 				case 1: autonController->Test(); break;
 			}*/
 			
-			autonController->WayneCokeley();
+			//autonController->WayneCokeley();
 			//autonController->MikeLube();
 			//autonController->JackTusman();
-			//autonController->JimTheWelder();
+			autonController->JimTheWelder();
 			//autonController->CliffDey();
 			//autonController->Test();
 			
