@@ -120,7 +120,6 @@ void Shooter::EnableTeleopControls() {
 	}
 	
 	if (m_controls->GetShooterButton(2)) {
-		Reset();
 		BucketDown();
 	}
 }
