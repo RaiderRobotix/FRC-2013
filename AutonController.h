@@ -31,6 +31,7 @@ public:
 	void CliffDey();
 	void JimTheWelder();
 	void JackTusman();
+	void MikeLube();
 	
 	void DoNothing();
 };

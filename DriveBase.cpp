@@ -241,7 +241,7 @@ bool DriveBase::DriveStraight(float setpoint, float tolerance, float p, float ma
 		
 		float leftSpeed = m_leftDrive->Get() + (angleError * p);
 		float rightSpeed = m_rightDrive->Get() - (angleError * p);
-		
+				
 		if (leftSpeed > 1.0) {
 			leftSpeed = 1.0;
 		} else if (leftSpeed < -1.0) {

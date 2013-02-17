@@ -252,6 +252,9 @@ void AutonController::JimTheWelder() {
 	}
 }
 
+/**
+ * 7 Disk Auto
+ */
 void AutonController::JackTusman() {
 	
 	printf("Auton Step: %d \n", m_step);
@@ -417,6 +420,100 @@ void AutonController::JackTusman() {
 			m_timer->Stop();
 			m_timer->Reset();
 		}
+		drivebase->SetSpeed(0.0);
+	}
+}
+
+/**
+ * From back of the pyramid to the centerline.
+ */
+void AutonController::MikeLube() {
+	printf("Auton Step: %d \n", m_step);
+	if (m_step == 0) {
+		shooter->Reset();
+		shooter->TurnOn();
+		
+		drivebase->ResetGyro();
+		drivebase->ResetEncoders();
+		
+		m_timer->Start();
+		m_timer->Reset();
+		m_step++;
+	} else if (m_step == 1) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 2) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 3) {
+		if (m_timer->Get() > 1.0) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 1.15) {
+			shooter->Reset();
+			drivebase->ResetGyro();
+			drivebase->ResetEncoders();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 4) {
+		drivebase->SetEncoderPID(0.030, 0.0, 0.0);
+		shooter->TurnOff();
+		shooter->BucketDown();
+		pickup->TurnOn(0.5);
+		m_driveStraightComplete = drivebase->DriveStraight(-100, 2.0, 0.0002, 0.8);
+		if (m_driveStraightComplete) {
+			m_driveStraightComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else if (m_step == 5) {
+		m_turnComplete = drivebase->Turn(80, 5.0, 0.45);
+		if(m_turnComplete) {
+			m_turnComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else if (m_step == 6) {
+		m_driveStraightComplete = drivebase->DriveStraight(115, 2.0, 0.0002, 0.5);
+		if (m_driveStraightComplete) {
+			m_driveStraightComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else if (m_step == 7) {
+		m_turnComplete = drivebase->Turn(-75, 5.0, 0.45);
+		if(m_turnComplete) {
+			m_turnComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else if (m_step == 8) {
+		m_driveStraightComplete = drivebase->DriveStraight(110, 2.0, 0.0002);
+		if (m_driveStraightComplete) {
+			m_driveStraightComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else {
 		drivebase->SetSpeed(0.0);
 	}
 }
