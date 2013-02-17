@@ -83,10 +83,6 @@ void Shooter::EnableTeleopControls() {
 		m_rapidFireTimer->Reset();
 	}
 	
-	if (m_controls->GetShooterButton(4)) {
-		Reset();
-	}
-	
 	if (m_controls->GetShooterY() > 0.5) {
 		BucketUp();
 		TiltUp();
