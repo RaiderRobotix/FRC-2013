@@ -38,8 +38,8 @@ public:
 		autonController = AutonController::GetInstance();
 		
 		drivebase = DriveBase::GetInstance();
-		pickup = Pickup::GetInstance();
 		shooter = Shooter::GetInstance();
+		pickup = Pickup::GetInstance();
 		controls = Controls::GetInstance();
 		
 		compressor = new Relay(COMPRESSOR_RELAY_CHAN, Relay::kForwardOnly);
@@ -76,7 +76,8 @@ public:
 				case 1: autonController->Test(); break;
 			}*/
 			
-			autonController->MikeLube();
+			autonController->WayneCokeley();
+			//autonController->MikeLube();
 			//autonController->JackTusman();
 			//autonController->JimTheWelder();
 			//autonController->CliffDey();
@@ -135,7 +136,8 @@ public:
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f         ", drivebase->GetGyroAngle());
-			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "PSwitch: %d      ",  pressureSwitch->Get());
+			dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "Sonic: %f      ",  drivebase->GetUltrasonicDistance());
+			//dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "PSwitch: %d      ",  pressureSwitch->Get());
 			//dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "L: %f R: %f      ",  drivebase->GetLeftSpeed(), drivebase->GetRightSpeed());
 			dsLCD->UpdateLCD();
 			

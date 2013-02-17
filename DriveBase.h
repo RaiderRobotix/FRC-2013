@@ -22,6 +22,8 @@ private:
 	
 	Gyro* m_gyro;
 	
+	AnalogChannel* m_ultrasonic;
+	
 	PIDController* m_gyroController;
 	
 	bool m_isTurning;
@@ -58,6 +60,8 @@ public:
 	void EnableGyroPid();
 	void DisableGyroPid();
 	void SetGyroSetpoint(float angle);
+	
+	float DriveBase::GetUltrasonicDistance();
 	
 	// TODO: REMOVE HACK
 	PIDController* GetGyroController();

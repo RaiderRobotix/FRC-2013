@@ -518,6 +518,96 @@ void AutonController::MikeLube() {
 	}
 }
 
+void AutonController::WayneCokeley() {
+	if (m_step == 0) {
+		m_timer->Start();
+		m_timer->Reset();
+		drivebase->ResetGyro();
+		drivebase->ResetEncoders();
+		m_step++;
+	} else if (m_step == 1) {
+		drivebase->SetEncoderPID(0.030, 0.0, 0.0);
+		shooter->TiltUp();
+		shooter->Reset();
+		m_driveStraightComplete = drivebase->DriveStraight(110, 2.0, 0.0002, 0.6);
+		if (m_driveStraightComplete) {
+			m_driveStraightComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else if (m_step == 2) {
+		m_turnComplete = drivebase->Turn(25, 5.0, 0.45);
+		shooter->TurnOn();
+		if(m_turnComplete) {
+			m_turnComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 3) {
+		if (m_timer->Get() > 0.5) {
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 0.65) {
+			shooter->Reset();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 4) {
+		if (m_timer->Get() > 0.5) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 0.65) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 5) {
+		if (m_timer->Get() > 0.5) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 0.65) {
+			shooter->Reset();
+			drivebase->ResetGyro();
+			drivebase->ResetEncoders();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 6) {
+		m_turnComplete = drivebase->Turn(60, 5.0, 0.45);
+		shooter->TiltDown();
+		shooter->BucketDown();
+		shooter->TurnOff();
+		pickup->TurnOn(0.4);
+		if(m_turnComplete) {
+			m_turnComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 7) {
+		m_driveStraightComplete = drivebase->DriveStraight(100, 2.0, 0.0002, 0.6);
+		if (m_driveStraightComplete) {
+			m_driveStraightComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else {
+		if (m_timer->Get() > 3.0) {
+			m_timer->Stop();
+			m_timer->Reset();
+			shooter->TurnOff();
+		}
+		drivebase->SetSpeed(0.0);
+		pickup->TurnOff();
+	}
+}
+
 void AutonController::DoNothing() {
 	drivebase->SetSpeed(0.0);
 	// TODO: Make other components do nothing.

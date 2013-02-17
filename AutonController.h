@@ -32,6 +32,7 @@ public:
 	void JimTheWelder();
 	void JackTusman();
 	void MikeLube();
+	void WayneCokeley();
 	
 	void DoNothing();
 };

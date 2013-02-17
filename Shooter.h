@@ -28,8 +28,10 @@ private:
 	
 	bool m_bucketIsUp;
 	bool m_tiltIsUp;
+	bool m_shooterIsOn;
 	
 	Timer* m_timer;
+	Timer* m_tiltTimer;
 	Timer* m_rapidFireTimer;
 	bool m_timerIsRunning;
 	int m_rapidFireStep;
@@ -47,6 +49,8 @@ public:
 	void TiltDown();
 	void BucketUp();
 	void BucketDown();
+	bool IsBucketUp();
+	bool IsTiltUp();
 };
 
 #endif
