@@ -39,7 +39,7 @@ public:
 	Shooter();
 	
 	void EnableTeleopControls();
-	void TurnOn();
+	void TurnOn(float speed = 1.0);
 	void TurnOff();
 	void Shoot();
 	void Reset();

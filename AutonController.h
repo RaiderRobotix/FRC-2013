@@ -30,6 +30,7 @@ public:
 	
 	void CliffDey();
 	void JimTheWelder();
+	void JackTusman();
 	
 	void DoNothing();
 };

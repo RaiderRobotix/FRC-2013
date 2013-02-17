@@ -76,7 +76,8 @@ public:
 				case 1: autonController->Test(); break;
 			}*/
 			
-			autonController->JimTheWelder();
+			autonController->JackTusman();
+			//autonController->JimTheWelder();
 			//autonController->CliffDey();
 			//autonController->Test();
 			

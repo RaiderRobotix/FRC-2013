@@ -111,9 +111,9 @@ void Shooter::EnableTeleopControls() {
 	}
 }
 
-void Shooter::TurnOn() {
-	m_shooterWheel1->Set(1.0);
-	m_shooterWheel2->Set(1.0);
+void Shooter::TurnOn(float speed) {
+	m_shooterWheel1->Set(speed);
+	m_shooterWheel2->Set(speed);
 }
 
 void Shooter::TurnOff() {

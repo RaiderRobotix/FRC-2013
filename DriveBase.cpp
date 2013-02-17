@@ -257,39 +257,19 @@ bool DriveBase::DriveStraight(float setpoint, float tolerance, float p, float ma
 		m_leftDrive->Set(leftSpeed);
 		m_rightDrive->Set(rightSpeed);
 		
-		// Determine when to disable PID
-		/*bool leftOnTarget = fabs(setpoint - encoderCountToInches(m_leftEncoder->Get())) < tolerance;
-		bool rightOnTarget = fabs(setpoint - encoderCountToInches(m_rightEncoder->Get())) < tolerance;
-		
-		
-		if (leftOnTarget && rightOnTarget) {
-			DisableEncoderPid();
-			m_isDrivingStraight = false;
-			return true;
-		}*/
-		if ((encoderCountToInches(m_leftEncoder->Get()) >= setpoint) || (encoderCountToInches(m_rightEncoder->Get()) >= setpoint)) {
-			DisableEncoderPid();
-			m_isDrivingStraight = false;
-			return true;
-		}
-		
-		/*
-		if(leftOnTarget && rightOnTarget) {
-			if (m_timerStopped) {
-				m_timer->Reset();
-			}
-			m_timer->Start();
-			m_timerStopped = false;
-			if (m_timer->Get() > 0.5) {	//TODO: KILL MAGIC NUMBER
+		if (setpoint > 0) {
+			if ((encoderCountToInches(m_leftEncoder->Get()) >= setpoint) || (encoderCountToInches(m_rightEncoder->Get()) >= setpoint)) {
 				DisableEncoderPid();
-				m_timer->Reset();
 				m_isDrivingStraight = false;
 				return true;
 			}
 		} else {
-			m_timer->Stop();
-			m_timerStopped = true;
-		}*/
+			if ((encoderCountToInches(m_leftEncoder->Get()) <= setpoint) || (encoderCountToInches(m_rightEncoder->Get()) <= setpoint)) {
+				DisableEncoderPid();
+				m_isDrivingStraight = false;
+				return true;
+			}
+		}
 	}
 	return false;
 }
