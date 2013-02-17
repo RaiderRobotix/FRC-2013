@@ -76,7 +76,9 @@ public:
 				case 1: autonController->Test(); break;
 			}*/
 			
-			autonController->CliffDey();
+			autonController->JimTheWelder();
+			//autonController->CliffDey();
+			//autonController->Test();
 			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
@@ -99,6 +101,10 @@ public:
 	 */
 	void OperatorControl(void)
 	{
+		drivebase->DisableEncoderPid();
+		drivebase->ResetEncoders();
+		drivebase->DisableGyroPid();
+		
 		while (IsOperatorControl() && IsEnabled())
 		{	
 			autonController->Reset();
@@ -139,7 +145,7 @@ public:
 	 * Runs during test mode
 	 */
 	void Test() {
-		float p = 0.0;
+		float p = 0.015;
 		float i = 0.0;
 		float d = 0.0;
 		
@@ -148,12 +154,13 @@ public:
 		//float i = 0.0;
 		//float d = 0.002116;
 		
-		float encoderSetpoint = 100.0;
-		float turnSetpoint = 45.0;
+		float encoderSetpoint = 200.0;
+		float turnSetpoint = 90.0;
 		float distanceIncrement = 0.01;
 		float increment = 0.000001;
 		
 		bool timerStopped = false;
+		bool timerRunning = false;
 		
 		while (IsTest() && IsEnabled()) {
 			
@@ -189,7 +196,7 @@ public:
 				drivebase->ResetEncoders();
 				drivebase->ResetGyro();
 			}
-			
+		/*	
 			// Controls for gyro
 			PIDController* gyroController = drivebase->GetGyroController();
 			//gyroController->SetPID(p, i, d);
@@ -229,20 +236,43 @@ public:
 				gyroController->Disable();
 				//drivebase->Turn(turnSetpoint, 2);
 			}
-			
-			drivebase->SetEncoderSetpoint(encoderSetpoint);
-			drivebase->SetEncoderPID(p,i,d);
-			
-			if (controls->GetLeftButton(4)) {
-				//drivebase->EnableEncoderPid();
-				drivebase->DriveStraight(encoderSetpoint, 2.0, DRIVE_STRAIGHT_P);
-			}
-			if (controls->GetLeftButton(5)) {
-				drivebase->DisableEncoderPid();
-			}
+			*/
 			
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
+			
+		//	drivebase->SetEncoderSetpoint(encoderSetpoint);
+			// drivebase->SetEncoderPID(p,i,d);
+		//	drivebase->SetLeftEncoderPID(p, i, d);
+		//	drivebase->SetRightEncoderPID(p, i, d);
+			
+			if (controls->GetLeftButton(4)) {
+			/*	timer->Start();
+				timer->Reset();
+				timerRunning = true;
+				printf("Timer Running: %s \n", timerRunning ? "True" : "false");*/
+				//drivebase->EnableEncoderPid();
+				//drivebase->DriveStraight(encoderSetpoint, 2.0, DRIVE_STRAIGHT_P);
+				drivebase->DriveStraight(encoderSetpoint, 2.0, p);
+			}
+			/*
+			float t = 0.75;
+			if (timerRunning) {
+				drivebase->SetSpeed(timer->Get() / t);
+				printf("Speed: %f \n", drivebase->GetLeftSpeed());
+			}
+			
+			if (timer->Get() > t) {
+				drivebase->EnableEncoderPid();
+				timer->Stop();
+				timer->Reset();
+				timerRunning = false;
+				printf("Timer Expired: %s \n", !timerRunning ? "True" : "false");
+			}
+			*/
+			if (controls->GetLeftButton(5)) {
+				drivebase->DisableEncoderPid();
+			}
 			
 			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "L %f, R: %f      ", encoderCountToInches(leftEncoderCount), encoderCountToInches(rightEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Gyro %f     ", drivebase->GetGyroAngle());

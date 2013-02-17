@@ -4,6 +4,7 @@
 #include "WPILib.h"
 #include "DriveBase.h"
 #include "Shooter.h"
+#include "Pickup.h"
 
 class AutonController {
 	
@@ -12,6 +13,7 @@ private:
 	
 	DriveBase* drivebase;
 	Shooter* shooter;
+	Pickup* pickup;
 	
 	bool m_turnComplete;
 	bool m_driveStraightComplete;

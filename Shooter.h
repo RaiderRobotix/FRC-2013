@@ -30,7 +30,9 @@ private:
 	bool m_tiltIsUp;
 	
 	Timer* m_timer;
+	Timer* m_rapidFireTimer;
 	bool m_timerIsRunning;
+	int m_rapidFireStep;
 	
 public:
 	static Shooter* GetInstance();

@@ -16,6 +16,8 @@ public:
 	Pickup();
 	
 	void EnableTeleopControls();
+	void TurnOn();
+	void TurnOff();
 };
 
 #endif

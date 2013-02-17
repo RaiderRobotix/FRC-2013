@@ -33,9 +33,13 @@ static const int GYRO_CHANNEL = 1;
 static const float GYRO_SENSITIVITY = 0.007; // 7 mV/deg/sec
 
 // ENCODER PID
-static const float ENCODER_P = 0.019;
-static const float ENCODER_I = 0.0;
-static const float ENCODER_D = 0.016;
+static const float LEFT_ENCODER_P = 0.015;
+static const float LEFT_ENCODER_I = 0.0;
+static const float LEFT_ENCODER_D = 0.0;
+
+static const float RIGHT_ENCODER_P = 0.013;
+static const float RIGHT_ENCODER_I = 0.0;
+static const float RIGHT_ENCODER_D = 0.0;
 
 // GYRO PID
 static const float GYRO_P = 0.013022;
@@ -43,7 +47,7 @@ static const float GYRO_I = 0.0;
 static const float GYRO_D = 0.002116;
 
 // DRIVE STRAIGHT
-static const float DRIVE_STRAIGHT_P = 0.002;
+static const float DRIVE_STRAIGHT_P = 0.0002;
 
 // Encoders are geared at a 1:1 ratio.
 // TODO: Configuration for left and right sides of drivetrain.

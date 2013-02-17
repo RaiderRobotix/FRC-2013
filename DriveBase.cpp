@@ -30,8 +30,8 @@ DriveBase::DriveBase() {
 	m_leftEncoderController = new PIDController(0.0, 0.0, 0.0, m_leftEncoder, m_leftDrive);
 	m_rightEncoderController = new PIDController(0.0, 0.0, 0.0, m_rightEncoder, m_rightDrive);
 	
-	m_leftEncoderController->SetPID(ENCODER_P, ENCODER_I, ENCODER_D);
-	m_rightEncoderController->SetPID(ENCODER_P, ENCODER_I, ENCODER_D);	
+	m_leftEncoderController->SetPID(LEFT_ENCODER_P, LEFT_ENCODER_I, LEFT_ENCODER_D);
+	m_rightEncoderController->SetPID(RIGHT_ENCODER_P, RIGHT_ENCODER_I, RIGHT_ENCODER_D);	
 	
 	// Gyro
 	m_gyro = new Gyro(GYRO_CHANNEL);
@@ -121,15 +121,16 @@ float DriveBase::GetGyroAngle() {
  * 
  * @return True if turn has completed, false otherwise.
  */
-bool DriveBase::Turn(float setpoint, float tolerance) {
+bool DriveBase::Turn(float setpoint, float tolerance, float maxSpeed) {
 	if (!m_isTurning) {
+		m_gyroController->SetOutputRange(-1.0, maxSpeed);
 		m_gyroController->SetSetpoint(setpoint);
 		m_gyroController->Enable();
 		m_isTurning = true;
 	}
 	
 	if (m_isTurning) {
-		m_rightDrive->Set(m_gyroController->Get());
+		m_rightDrive->Set(-1*m_gyroController->Get());
 
 		bool onTarget = fabs(setpoint - m_gyro->GetAngle()) < tolerance;
 
@@ -183,13 +184,23 @@ void DriveBase::SetEncoderPID(float p, float i, float d) {
 	m_rightEncoderController->SetPID(p,i,d);
 }
 
+void DriveBase::SetLeftEncoderPID(float p, float i, float d) {
+	m_leftEncoderController->SetPID(p, i, d);
+}
+
+void DriveBase::SetRightEncoderPID(float p, float i, float d) {
+	m_rightEncoderController->SetPID(p, i, d);
+}
+
 /**
  * Important: Reset the gyro before calling this function.
  * @param {float} setpoint - The setpoint for the encoders in inches.
  * @param {float} tolerance - The tolerance for the encoders in inches.
  */
-bool DriveBase::DriveStraight(float setpoint, float tolerance, float p) {
+bool DriveBase::DriveStraight(float setpoint, float tolerance, float p, float maxSpeed) {
 	if (!m_isDrivingStraight) {
+		m_leftEncoderController->SetOutputRange(-1.0, maxSpeed);
+		m_rightEncoderController->SetOutputRange(-1.0, maxSpeed);
 		SetEncoderSetpoint(setpoint);
 		EnableEncoderPid();
 		m_rightDrive->Set(m_leftEncoderController->Get());
@@ -221,11 +232,16 @@ bool DriveBase::DriveStraight(float setpoint, float tolerance, float p) {
 		m_rightDrive->Set(rightSpeed);
 		
 		// Determine when to disable PID
-		bool leftOnTarget = fabs(setpoint - encoderCountToInches(m_leftEncoder->Get())) < tolerance;
+		/*bool leftOnTarget = fabs(setpoint - encoderCountToInches(m_leftEncoder->Get())) < tolerance;
 		bool rightOnTarget = fabs(setpoint - encoderCountToInches(m_rightEncoder->Get())) < tolerance;
 		
 		
 		if (leftOnTarget && rightOnTarget) {
+			DisableEncoderPid();
+			m_isDrivingStraight = false;
+			return true;
+		}*/
+		if (encoderCountToInches(m_leftEncoder->Get()) >= setpoint) {
 			DisableEncoderPid();
 			m_isDrivingStraight = false;
 			return true;
@@ -248,6 +264,29 @@ bool DriveBase::DriveStraight(float setpoint, float tolerance, float p) {
 			m_timer->Stop();
 			m_timerStopped = true;
 		}*/
+	}
+	return false;
+}
+
+bool DriveBase::DriveForward(float setpoint, float tolerance) {
+	if (!m_isDrivingStraight) {
+		SetEncoderSetpoint(setpoint);
+		EnableEncoderPid();
+		m_isDrivingStraight = true;
+	}
+	
+	if (m_isDrivingStraight) {
+		
+		// Determine when to disable PID
+		bool leftOnTarget = fabs(setpoint - encoderCountToInches(m_leftEncoder->Get())) < tolerance;
+		bool rightOnTarget = fabs(setpoint - encoderCountToInches(m_rightEncoder->Get())) < tolerance;
+		
+		
+		if (leftOnTarget && rightOnTarget) {
+			DisableEncoderPid();
+			m_isDrivingStraight = false;
+			return true;
+		}
 	}
 	return false;
 }

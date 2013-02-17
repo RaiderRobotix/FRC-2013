@@ -32,7 +32,9 @@ Shooter::Shooter() {
 	m_tiltIsUp = false;
 	
 	m_timer = new Timer();
-	m_timerIsRunning = false;
+	m_rapidFireTimer = new Timer();
+	m_rapidFireTimer->Reset();
+	m_rapidFireStep = 0;
 }
 
 void Shooter::EnableTeleopControls() {
@@ -60,16 +62,47 @@ void Shooter::EnableTeleopControls() {
 		Reset();
 	}
 	
+	if (m_controls->GetRightButton(2) && m_bucketIsUp && m_rapidFireStep < 4) {
+		m_rapidFireTimer->Start();
+		if (m_rapidFireTimer->Get() > 0.15) {
+			Reset();
+		} else {
+			Shoot();
+			printf("Shot, Rapid Step: %d\n", m_rapidFireStep);
+		}
+		if (m_rapidFireTimer->Get() > 0.5) {
+			m_rapidFireTimer->Reset();
+			m_rapidFireStep++;
+			printf("Reset & ++ Step: %d\n", m_rapidFireStep);
+		}
+	} 
+	
+	if (m_rapidFireTimer->Get() > 2.0 && m_rapidFireStep == 4) {
+		m_rapidFireStep = 0;
+		m_rapidFireTimer->Stop();
+		m_rapidFireTimer->Reset();
+	}
+	
 	if (m_controls->GetShooterButton(4)) {
 		Reset();
 	}
 	
 	if (m_controls->GetShooterY() > 0.5) {
+		BucketUp();
 		TiltUp();
 	}
 	
 	if (m_controls->GetShooterY() < -0.5) {
+		BucketDown();
 		TiltDown();
+	}
+	
+	if (m_controls->GetShooterButton(4)) {
+		TiltDown();
+	}
+	
+	if (m_controls->GetShooterButton(5)) {
+		TiltUp();
 	}
 	
 	if (m_controls->GetShooterButton(3)) {

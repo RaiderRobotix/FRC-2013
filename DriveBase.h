@@ -53,7 +53,7 @@ public:
 	
 	void ResetGyro();
 	float GetGyroAngle();
-	bool Turn(float setpoint, float tolerance);
+	bool Turn(float setpoint, float tolerance, float maxSpeed = 1.0);
 	bool IsTurning();
 	void EnableGyroPid();
 	void DisableGyroPid();
@@ -62,8 +62,11 @@ public:
 	// TODO: REMOVE HACK
 	PIDController* GetGyroController();
 	void SetEncoderPID(float p, float i, float d);
+	void SetLeftEncoderPID(float p, float i, float d);
+	void SetRightEncoderPID(float p, float i, float d);
 	
-	bool DriveStraight(float inches, float tolerance, float p);
+	bool DriveStraight(float setpoint, float tolerance, float p, float maxSpeed = 1.0);
+	bool DriveForward(float setpoint, float tolerance);
 };
 
 #endif
