@@ -26,5 +26,6 @@ public:
 	float GetShooterY();
 	bool GetShooterButton(int button);
 	bool GetShooterTrigger();
+	float GetShooterThrottle();
 };
 #endif

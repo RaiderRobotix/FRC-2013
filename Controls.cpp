@@ -52,3 +52,7 @@ bool Controls::GetShooterButton(int button) {
 bool Controls::GetShooterTrigger() {
 	return m_shooterStick->GetTrigger();
 }
+
+float Controls::GetShooterThrottle(){
+	return m_shooterStick->GetThrottle();
+}

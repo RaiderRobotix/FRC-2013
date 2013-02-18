@@ -122,6 +122,12 @@ void Shooter::EnableTeleopControls() {
 	if (m_controls->GetShooterButton(2)) {
 		BucketDown();
 	}
+	
+	if (m_controls->GetShooterButton(10)) {
+		float sSpeed = ((m_controls->GetShooterThrottle()+1)/2);
+		printf("Shooter speed: %f\n\n", sSpeed);
+		TurnOn((m_controls->GetShooterThrottle()+1)/2);
+	}
 }
 
 void Shooter::TurnOn(float speed) {
