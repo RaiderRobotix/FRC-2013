@@ -269,29 +269,29 @@ void AutonController::JackTusman() {
 		m_timer->Reset();
 		m_step++;
 	} else if (m_step == 1) {
-		if (m_timer->Get() > 0.5) {
+		if (m_timer->Get() > 0.6) {
 			shooter->Shoot();
 		} 
-		if (m_timer->Get() > 0.65) {
+		if (m_timer->Get() > 0.75) {
 			shooter->Reset();
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 2) {
-		if (m_timer->Get() > 0.5) {
+		if (m_timer->Get() > 0.6) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 0.65) {
+		if (m_timer->Get() > 0.75) {
 			shooter->Reset();
 			
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 3) {
-		if (m_timer->Get() > 0.5) {
+		if (m_timer->Get() > 0.7) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 0.65) {
+		if (m_timer->Get() > 0.85) {
 			shooter->Reset();
 			
 			m_timer->Reset();
@@ -328,7 +328,7 @@ void AutonController::JackTusman() {
 			m_step++;
 		}
 	} else if (m_step == 8) {
-		m_turnComplete = drivebase->Turn(90.0, 12.0, 0.55);
+		m_turnComplete = drivebase->Turn(80.0, 12.0, 0.45);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -377,6 +377,7 @@ void AutonController::JackTusman() {
 			m_driveStraightComplete = false;
 			drivebase->ResetEncoders();
 			drivebase->ResetGyro();
+			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 14) {
