@@ -15,6 +15,7 @@ Controls::Controls() {
 	m_leftStick = new Joystick(LEFT_JOYSTICK_PORT);
 	m_rightStick = new Joystick(RIGHT_JOYSTICK_PORT);
 	m_shooterStick = new Joystick(SHOOTER_JOYSTICK_PORT);
+	m_climberStick = new Joystick(CLIMBER_JOYSTICK_PORT);
 }
 
 float Controls::GetLeftY() {
@@ -55,4 +56,20 @@ bool Controls::GetShooterTrigger() {
 
 float Controls::GetShooterThrottle(){
 	return m_shooterStick->GetThrottle();
+}
+
+float Controls::GetClimberY(){
+	return m_climberStick->GetY();
+}
+
+bool Controls::GetClimberButton(int button){
+	return m_climberStick->GetRawButton(button);
+}
+
+bool Controls::GetClimberTrigger(){
+	return m_climberStick->GetTrigger();
+}
+
+float Controls::GetClimberThrottle(){
+	return m_climberStick->GetThrottle();
 }

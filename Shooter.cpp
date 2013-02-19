@@ -12,6 +12,7 @@ Shooter* Shooter::GetInstance() {
 }
 
 Shooter::Shooter() {
+	
 	m_shooterWheel1 = new Talon(SHOOTER_BAG_PWM);
 	m_shooterWheel2 = new Talon(SHOOTER_775_PWM);
 	
@@ -41,6 +42,7 @@ Shooter::Shooter() {
 	m_rapidFireTimer = new Timer();
 	m_rapidFireTimer->Reset();
 	m_rapidFireStep = 0;
+	
 }
 
 void Shooter::EnableTeleopControls() {

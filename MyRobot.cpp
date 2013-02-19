@@ -20,6 +20,7 @@ class RobotDemo : public SimpleRobot
 	DriveBase* drivebase;
 	Pickup* pickup;
 	Shooter* shooter;
+	Climber* climber;
 	Controls* controls;
 	
 	Relay* compressor;
@@ -40,6 +41,7 @@ public:
 		drivebase = DriveBase::GetInstance();
 		shooter = Shooter::GetInstance();
 		pickup = Pickup::GetInstance();
+		climber = Climber::GetInstance();
 		controls = Controls::GetInstance();
 		
 		compressor = new Relay(COMPRESSOR_RELAY_CHAN, Relay::kForwardOnly);
@@ -53,7 +55,7 @@ public:
 		autonSelector = new SendableChooser();
 		autonSelector->AddObject("1. Test - Test Auton", (void*)1);
 		autonSelector->AddObject("2. Wayne Cokeley - Bottom Left, Front Pickup", (void*)2);
-		autonSelector->AddObject("3. Mike L. NOT FINISHED", (void*)3);
+		autonSelector->AddObject("3. Mike L. NOT FINISHED 7 SHOT", (void*)3);
 		autonSelector->AddObject("4. Jack Tusman NOT FINISHED", (void*)4);
 		autonSelector->AddObject("5. Jim the Welder - Bottom Right, Pyramid Pickup", (void*)5);
 		autonSelector->AddObject("6. Cliff Dey - Shoot from back of pyramid ONLY", (void*)6);
@@ -88,19 +90,21 @@ public:
 				
 			}
 			
+			/*
 			autonController->WayneCokeley();
 			autonController->MikeLube();
 			autonController->JackTusman();
 			autonController->JimTheWelder();
 			autonController->CliffDey();
 			autonController->Test();
+			*/
 			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
 			
 			// For Debug Purposes
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
+			//dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));

@@ -24,6 +24,8 @@ private:
 	
 	AnalogChannel* m_ultrasonic;
 	
+	DigitalOutput* m_launch;
+	
 	PIDController* m_gyroController;
 	
 	bool m_isTurning;
