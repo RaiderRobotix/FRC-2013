@@ -84,8 +84,8 @@ void AutonController::Test() {
 }
 
 /**
- * Sit and shoot three from the back of the pyramid.
- * Grab the discs under the pyramid.
+ * Sit and shoot three from the back of the pyramid.?
+ * Grab the discs under the pyramid.?
  */
 void AutonController::CliffDey() {
 	if (m_step == 0) {
@@ -146,29 +146,29 @@ void AutonController::JimTheWelder() {
 		m_timer->Reset();
 		m_step++;
 	} else if (m_step == 1) {
-		if (m_timer->Get() > 0.5) {
+		if (m_timer->Get() > 1.5) {
 			shooter->Shoot();
 		} 
-		if (m_timer->Get() > 0.65) {
+		if (m_timer->Get() > 1.65) {
 			shooter->Reset();
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 2) {
-		if (m_timer->Get() > 0.5) {
+		if (m_timer->Get() > 1.0) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 0.65) {
+		if (m_timer->Get() > 1.15) {
 			shooter->Reset();
 			
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 3) {
-		if (m_timer->Get() > 0.5) {
+		if (m_timer->Get() > 1.0) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 0.65) {
+		if (m_timer->Get() > 1.15) {
 			shooter->Reset();
 			
 			m_timer->Reset();
@@ -205,7 +205,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 8) {
-		m_turnComplete = drivebase->Turn(90.0, 12.0, 0.55); 
+		m_turnComplete = drivebase->Turn(70.0, 12.0, 0.45); 
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -519,6 +519,7 @@ void AutonController::MikeLube() {
 }
 
 void AutonController::WayneCokeley() {
+	printf("Auton Step: %d \n", m_step);
 	if (m_step == 0) {
 		m_timer->Start();
 		m_timer->Reset();
@@ -529,7 +530,8 @@ void AutonController::WayneCokeley() {
 		drivebase->SetEncoderPID(0.030, 0.0, 0.0);
 		shooter->TiltUp();
 		shooter->Reset();
-		m_driveStraightComplete = drivebase->DriveStraight(110, 2.0, 0.0002, 0.6);
+		m_driveStraightComplete = drivebase->DriveStraight(116, 2.0, 0.0002, 0.6);
+		shooter->TurnOn();
 		if (m_driveStraightComplete) {
 			m_driveStraightComplete = false;
 			drivebase->ResetEncoders();
@@ -538,7 +540,6 @@ void AutonController::WayneCokeley() {
 		}
 	} else if (m_step == 2) {
 		m_turnComplete = drivebase->Turn(25, 5.0, 0.45);
-		shooter->TurnOn();
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -577,11 +578,20 @@ void AutonController::WayneCokeley() {
 			m_step++;
 		}
 	} else if (m_step == 6) {
-		m_turnComplete = drivebase->Turn(60, 5.0, 0.45);
+		drivebase->SetEncoderPID(0.040, 0.0, 0.0);
+		m_driveStraightComplete = drivebase->DriveStraight(15, 2.0, 0.0002);
+		if (m_driveStraightComplete) {
+			m_driveStraightComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else if (m_step == 7) {
+		m_turnComplete = drivebase->Turn(53, 5.0, 0.45);
 		shooter->TiltDown();
 		shooter->BucketDown();
 		shooter->TurnOff();
-		pickup->TurnOn(0.4);
+		pickup->TurnOn(0.7);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -589,12 +599,54 @@ void AutonController::WayneCokeley() {
 			m_timer->Reset();
 			m_step++;
 		}
-	} else if (m_step == 7) {
+	} else if (m_step == 8) {
+		drivebase->SetEncoderPID(0.030, 0.0, 0.0);
 		m_driveStraightComplete = drivebase->DriveStraight(100, 2.0, 0.0002, 0.6);
 		if (m_driveStraightComplete) {
 			m_driveStraightComplete = false;
 			drivebase->ResetEncoders();
 			drivebase->ResetGyro();
+			m_step++;
+		}
+	} else if (m_step == 9) {
+		m_turnComplete = drivebase->Turn(-120, 5.0, 0.45);
+		shooter->BucketUp();
+		shooter->TurnOn();
+		if(m_turnComplete) {
+			m_turnComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 10) {
+		m_driveStraightComplete = drivebase->DriveStraight(-30, 2.0, 0.0002);
+		shooter->TiltUp();
+		if (m_driveStraightComplete) {
+			m_driveStraightComplete = false;
+			drivebase->ResetEncoders();
+			drivebase->ResetGyro();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 11) {
+		if (m_timer->Get() > 0.5) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 0.65) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 12) {
+		if (m_timer->Get() > 0.5) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 0.65) {
+			shooter->Reset();
+			
+			m_timer->Reset();
 			m_step++;
 		}
 	} else {

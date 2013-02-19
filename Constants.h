@@ -32,7 +32,7 @@ static const int RIGHT_ENCODER_B = 4;
 static const int GYRO_CHANNEL = 1;
 static const float GYRO_SENSITIVITY = 0.007; // 7 mV/deg/sec
 
-static const int ULTRASONIC_CHANNEL = 8;
+static const int ULTRASONIC_CHANNEL = 2;
 
 // ENCODER PID
 static const float LEFT_ENCODER_P = 0.015;
