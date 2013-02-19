@@ -483,7 +483,7 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else if (m_step == 5) {
-		m_turnComplete = drivebase->Turn(75, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(67, 5.0, 0.45);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -491,7 +491,7 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else if (m_step == 6) {
-		m_driveStraightComplete = drivebase->DriveStraight(140, 2.0, 0.0002, 0.75);
+		m_driveStraightComplete = drivebase->DriveStraight(160, 2.0, 0.0002, 0.75);
 		if (m_driveStraightComplete) {
 			m_driveStraightComplete = false;
 			drivebase->ResetEncoders();
@@ -499,7 +499,7 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else if (m_step == 7) {
-		m_turnComplete = drivebase->Turn(-75, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(-77, 5.0, 0.45);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -509,7 +509,8 @@ void AutonController::MikeLube() {
 	} else if (m_step == 8) {
 		shooter->BucketUp();
 		pickup->TurnOff();
-		m_driveStraightComplete = drivebase->DriveStraight(160, 2.0, 0.0002);
+		shooter->TurnOn(0.8);
+		m_driveStraightComplete = drivebase->DriveStraight(100, 2.0, 0.0002);
 		if (m_driveStraightComplete) {
 			m_driveStraightComplete = false;
 			drivebase->ResetEncoders();
@@ -559,6 +560,11 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else {
+		if (m_timer->Get() > 3.0) {
+			m_timer->Stop();
+			m_timer->Reset();
+			shooter->TurnOff();
+		}
 		drivebase->SetSpeed(0.0);
 	}
 }
