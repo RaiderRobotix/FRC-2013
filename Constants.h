@@ -21,8 +21,8 @@ static const int SHOOTER_775_PWM = 8;
 
 //CLIMBER MOTORS
 
-static const int CLIMB_WINDOW = 6;
-static const int CLIMB_CIM = 7;
+static const int CLIMB_WINDOW = 5;
+static const int CLIMB_CIM = 10;
 
 // CONTROLS
 
@@ -32,7 +32,9 @@ static const int SHOOTER_JOYSTICK_PORT = 3;
 static const int CLIMBER_JOYSTICK_PORT = 4;
 
 //STRING POT
-//TODO:ADD POT
+
+static const int WINDOW_POT = 3;
+static const int CIM_POT = 9;
 
 // SENSORS
 

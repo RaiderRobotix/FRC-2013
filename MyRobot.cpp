@@ -104,8 +104,11 @@ public:
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
 			
 			// For Debug Purposes
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Window Pot %d      ", climber->GetCimPot());
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "CIM Pot %d      ", climber->GetWindowPot());
+			
 			//dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
-			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
+			//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f         ", drivebase->GetGyroAngle());
@@ -130,6 +133,7 @@ public:
 			drivebase->EnableTeleopControls();
 			pickup->EnableTeleopControls();
 			shooter->EnableTeleopControls();
+			climber->EnableTeleopControls();
 			
 			// Pneumatics
 			if(pressureSwitch->Get() == 1){
@@ -147,8 +151,10 @@ public:
 				drivebase->ResetGyro();
 			}
 			
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
-			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Window Pot %d      ", climber->GetCimPot());
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "CIM Pot %d      ", climber->GetWindowPot());
+			//dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
+			//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f         ", drivebase->GetGyroAngle());

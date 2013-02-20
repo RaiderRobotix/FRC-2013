@@ -12,6 +12,9 @@ private:
 	Talon* m_climb;
 	Talon* m_rotate;
 	
+	AnalogChannel* m_windowPot;
+	AnalogChannel* m_cimPot;
+	
 	Climber* climber;
 	
 public:
@@ -19,6 +22,8 @@ public:
 	Climber();
 	
 	void EnableTeleopControls();
+	int GetWindowPot();
+	int GetCimPot();
 };
 
 #endif

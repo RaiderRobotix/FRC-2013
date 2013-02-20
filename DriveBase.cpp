@@ -56,6 +56,7 @@ void DriveBase::EnableTeleopControls() {
 	m_leftDrive->Set(-1*m_controls->GetLeftY());
 	m_rightDrive->Set(-1*m_controls->GetRightY());
 	
+	//Ultrasonic to turn on light
 	if(GetUltrasonicDistance() > 500 && GetUltrasonicDistance() < 560) {
 		m_launch->Set(1);
 	} else {
