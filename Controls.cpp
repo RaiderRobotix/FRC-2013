@@ -62,6 +62,10 @@ float Controls::GetClimberY(){
 	return m_climberStick->GetY();
 }
 
+float Controls::GetClimberX(){
+	return m_climberStick->GetX();
+}
+
 bool Controls::GetClimberButton(int button){
 	return m_climberStick->GetRawButton(button);
 }

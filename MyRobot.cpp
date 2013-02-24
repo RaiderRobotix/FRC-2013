@@ -78,6 +78,7 @@ public:
 		
 		while (IsAutonomous() && IsEnabled()) 
 		{	
+			climber->TiltToDrivingPosition();
 			
 			switch (selectedAutoMode) {
 				case 0: autonController->DoNothing(); break;
@@ -87,28 +88,15 @@ public:
 				case 4: autonController->JackTusman(); break;
 				case 5: autonController->JimTheWelder(); break;
 				case 6: autonController->CliffDey(); break;
-				
 			}
-			
-			/*
-			autonController->WayneCokeley();
-			autonController->MikeLube();
-			autonController->JackTusman();
-			autonController->JimTheWelder();
-			autonController->CliffDey();
-			autonController->Test();
-			*/
 			
 			// Print Encoder Values to Driver station LCD
 			int leftEncoderCount = drivebase->GetLeftEncoderCount();
 			int rightEncoderCount = drivebase->GetRightEncoderCount();
 			
 			// For Debug Purposes
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Window Pot %d      ", climber->GetCimPot());
-			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "CIM Pot %d      ", climber->GetWindowPot());
-			
-			//dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
-			//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line4, 1, "Right In. %f     ", encoderCountToInches(rightEncoderCount));
 			dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "Gyro: %f         ", drivebase->GetGyroAngle());
@@ -151,8 +139,8 @@ public:
 				drivebase->ResetGyro();
 			}
 			
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Window Pot %d      ", climber->GetCimPot());
-			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "CIM Pot %d      ", climber->GetWindowPot());
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Tilt Pot %d      ", climber->GetTiltPot());
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Mast Pot %d      ", climber->GetMastPot());
 			//dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Left Enc %d      ", leftEncoderCount);
 			//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Right Enc %d     ", rightEncoderCount);
 			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Left In. %f      ", encoderCountToInches(leftEncoderCount));

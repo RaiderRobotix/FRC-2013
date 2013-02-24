@@ -16,6 +16,7 @@ AutonController::AutonController() {
 	drivebase = DriveBase::GetInstance();
 	shooter = Shooter::GetInstance();
 	pickup = Pickup::GetInstance();
+	climber = Climber::GetInstance();
 	
 	m_turnComplete = false;
 	m_driveStraightComplete = false;
@@ -134,7 +135,6 @@ void AutonController::CliffDey() {
  * Pick up discs under pyramid.
  */
 void AutonController::JimTheWelder() {
-	
 	printf("Auton Step: %d \n", m_step);
 	if (m_step == 0) {
 		shooter->Reset();

@@ -9,11 +9,11 @@ class Climber {
 private:
 	static Climber* m_instance;
 	Controls* m_controls;
-	Talon* m_climb;
-	Talon* m_rotate;
+	Talon* m_tilt;
+	Talon* m_mast;
 	
-	AnalogChannel* m_windowPot;
-	AnalogChannel* m_cimPot;
+	AnalogChannel* m_tiltPot;
+	AnalogChannel* m_mastPot;
 	
 	Climber* climber;
 	
@@ -22,8 +22,11 @@ public:
 	Climber();
 	
 	void EnableTeleopControls();
-	int GetWindowPot();
-	int GetCimPot();
+	void Tilt(float speed);
+	void TiltToDrivingPosition();
+	void Raise(float speed);
+	int GetTiltPot();
+	int GetMastPot();
 };
 
 #endif

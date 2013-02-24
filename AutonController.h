@@ -5,6 +5,7 @@
 #include "DriveBase.h"
 #include "Shooter.h"
 #include "Pickup.h"
+#include "Climber.h"
 
 class AutonController {
 	
@@ -14,6 +15,7 @@ private:
 	DriveBase* drivebase;
 	Shooter* shooter;
 	Pickup* pickup;
+	Climber* climber;
 	
 	bool m_turnComplete;
 	bool m_driveStraightComplete;

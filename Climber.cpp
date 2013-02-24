@@ -15,47 +15,85 @@ Climber* Climber::GetInstance() {
 Climber::Climber() {
 	m_controls = Controls::GetInstance();
 	
-	m_climb = new Talon(CLIMB_WINDOW);
-	m_rotate = new Talon(CLIMB_CIM);
+	m_tilt = new Talon(CLIMB_WINDOW);
+	m_mast = new Talon(CLIMB_CIM);
 	
-	m_windowPot = new AnalogChannel(WINDOW_POT);
-	m_cimPot = new AnalogChannel(CIM_POT);
+	m_tiltPot = new AnalogChannel(TILT_POT_CHAN);
+	m_mastPot = new AnalogChannel(MAST_POT_CHAN);
 }
 
 void Climber::EnableTeleopControls() {
-	//Raise arms - MOTOR IS SLOW FOR TESTING
-	if(m_controls->GetClimberButton(8)){
-		m_climb->Set(0.5);
+	// MAST
+	int mastPosition = m_mastPot->GetValue();
+	int lowerMastLimit = 580;
+	int upperMastLimit = 30;
+
+	if (m_controls->GetClimberButton(3) && mastPosition > upperMastLimit) {
+		m_mast->Set(1.0);
+	} else if (m_controls->GetClimberButton(2) && mastPosition < lowerMastLimit) {
+		m_mast->Set(-1.0);
 	} else {
-		m_climb->Set(0.0);
+		m_mast->Set(0.0);
 	}
 	
-	//Lower arms - MOTOR IS SLOW FOR TESTING
-	if(m_controls->GetClimberButton(7)){
-		m_climb->Set(-0.5);
-	} else {
-		m_climb->Set(0.0);
-	}
+	// TILT
+	int forwardTiltLimit = 590;
+	int backTiltLimit = 432;
 	
-	//Raise angle - MOTOR IS SLOW FOR TESTING
-	if(m_controls->GetClimberButton(11)){
-		m_rotate->Set(0.5);
-	} else {
-		m_rotate->Set(0.0);
-	}
+	float tiltSpeed = m_controls->GetClimberY();
+	int tiltPosition = m_tiltPot->GetValue();
 	
-	//Lower angle - MOTOR IS SLOW FOR TESTING
-	if(m_controls->GetClimberButton(10)){
-		m_rotate->Set(-0.5);
+	if (m_controls->GetClimberButton(7)) {
+		TiltToDrivingPosition();
+	} else if (tiltSpeed < -0.1 && tiltPosition < forwardTiltLimit) {
+		m_tilt->Set(tiltSpeed);
+	} else if (tiltSpeed > 0.1 && tiltPosition > backTiltLimit) {
+		m_tilt->Set(tiltSpeed);
 	} else {
-		m_rotate->Set(0.0);
-	}	
+		m_tilt->Set(0.0);
+	}
 }
 
-int Climber::GetWindowPot(){
-	return m_windowPot->GetValue();
+// TODO: Fix this. Set mast to a fixed speed if in the danger zone at each end.
+void Climber::Tilt(float speed) {
+	m_tilt->Set(speed);
+	if (speed < -0.1) {
+		m_mast->Set(0.3);
+	} else if (speed > 0.1) {
+		m_mast->Set(-0.3);
+	} else {
+		m_mast->Set(0.0);
+	}
 }
 
-int Climber::GetCimPot(){
-	return m_cimPot->GetValue();
+void Climber::TiltToDrivingPosition() {
+	int tiltPosition = m_tiltPot->GetValue();
+	int targetPosition = 432;
+	int position1 = targetPosition + 30;
+	int position2 = targetPosition + 20;
+	int position3 = targetPosition + 10;
+	
+	if (tiltPosition > position1) {
+		m_tilt->Set(1.0);
+	} else if (tiltPosition <= position1 && tiltPosition > position2 ) {
+		m_tilt->Set(0.7);
+	} else if (tiltPosition <= position2 && tiltPosition > position3) {
+		m_tilt->Set(0.5);
+	} else if (tiltPosition <= position3 && tiltPosition > targetPosition) {
+		m_tilt->Set(0.2);
+	} else {
+		m_tilt->Set(0.0);
+	}
+}
+
+void Climber::Raise(float speed) {
+	m_tilt->Set(speed);
+}
+
+int Climber::GetTiltPot(){
+	return m_tiltPot->GetValue();
+}
+
+int Climber::GetMastPot(){
+	return m_mastPot->GetValue();
 }

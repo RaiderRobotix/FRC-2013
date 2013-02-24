@@ -30,6 +30,7 @@ public:
 	float GetShooterThrottle();
 	
 	float GetClimberY();
+	float GetClimberX();
 	bool GetClimberButton(int button);
 	bool GetClimberTrigger();
 	float GetClimberThrottle();
