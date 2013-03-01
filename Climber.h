@@ -22,9 +22,8 @@ public:
 	Climber();
 	
 	void EnableTeleopControls();
-	void Tilt(float speed);
-	void TiltToDrivingPosition();
-	void Raise(float speed);
+	void TiltDownToDrivingPosition();
+	void TiltUpToDrivingPosition();
 	int GetTiltPot();
 	int GetMastPot();
 };

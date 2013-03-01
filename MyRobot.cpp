@@ -78,7 +78,7 @@ public:
 		
 		while (IsAutonomous() && IsEnabled()) 
 		{	
-			climber->TiltToDrivingPosition();
+			climber->TiltDownToDrivingPosition();
 			
 			switch (selectedAutoMode) {
 				case 0: autonController->DoNothing(); break;

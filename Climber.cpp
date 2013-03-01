@@ -44,7 +44,9 @@ void Climber::EnableTeleopControls() {
 	int tiltPosition = m_tiltPot->GetValue();
 	
 	if (m_controls->GetClimberButton(7) || m_controls->GetShooterButton(8)) {
-		TiltToDrivingPosition();
+		TiltDownToDrivingPosition();
+	} else if (m_controls->GetShooterButton(9)) {
+		TiltUpToDrivingPosition();
 	} else if (tiltSpeed < -0.1 && tiltPosition < forwardTiltLimit) {
 		m_tilt->Set(tiltSpeed);
 	} else if (tiltSpeed > 0.1 && tiltPosition > backTiltLimit) {
@@ -54,19 +56,7 @@ void Climber::EnableTeleopControls() {
 	}
 }
 
-// TODO: Fix this. Set mast to a fixed speed if in the danger zone at each end.
-void Climber::Tilt(float speed) {
-	m_tilt->Set(speed);
-	if (speed < -0.1) {
-		m_mast->Set(0.3);
-	} else if (speed > 0.1) {
-		m_mast->Set(-0.3);
-	} else {
-		m_mast->Set(0.0);
-	}
-}
-
-void Climber::TiltToDrivingPosition() {
+void Climber::TiltDownToDrivingPosition() {
 	int tiltPosition = m_tiltPot->GetValue();
 	int targetPosition = 432;
 	int position1 = targetPosition + 30;
@@ -86,8 +76,24 @@ void Climber::TiltToDrivingPosition() {
 	}
 }
 
-void Climber::Raise(float speed) {
-	m_tilt->Set(speed);
+void Climber::TiltUpToDrivingPosition() {
+	int tiltPosition = m_tiltPot->GetValue();
+	int targetPosition = 483;
+	int position3 = targetPosition - 10;
+	int position2 = targetPosition - 20;
+	int position1 = targetPosition - 30;
+	
+	if (tiltPosition < position1) {
+		m_tilt->Set(-1.0);
+	} else if (tiltPosition >= position1 && tiltPosition < position2 ) {
+		m_tilt->Set(-0.7);
+	} else if (tiltPosition >= position2 && tiltPosition < position3) {
+		m_tilt->Set(-0.5);
+	} else if (tiltPosition >= position3 && tiltPosition < targetPosition) {
+		m_tilt->Set(-0.2);
+	} else {
+		m_tilt->Set(0.0);
+	}
 }
 
 int Climber::GetTiltPot(){
