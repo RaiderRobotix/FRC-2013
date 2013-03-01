@@ -38,12 +38,12 @@ void Climber::EnableTeleopControls() {
 	
 	// TILT
 	int forwardTiltLimit = 590;
-	int backTiltLimit = 432;
+	int backTiltLimit = 434;
 	
 	float tiltSpeed = m_controls->GetClimberY();
 	int tiltPosition = m_tiltPot->GetValue();
 	
-	if (m_controls->GetClimberButton(7)) {
+	if (m_controls->GetClimberButton(7) || m_controls->GetShooterButton(8)) {
 		TiltToDrivingPosition();
 	} else if (tiltSpeed < -0.1 && tiltPosition < forwardTiltLimit) {
 		m_tilt->Set(tiltSpeed);
