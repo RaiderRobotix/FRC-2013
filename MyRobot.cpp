@@ -55,7 +55,7 @@ public:
 		autonSelector = new SendableChooser();
 		autonSelector->AddObject("1. Test - Test Auton", (void*)1);
 		autonSelector->AddObject("2. Wayne Cokeley - Bottom Left, Front Pickup", (void*)2);
-		autonSelector->AddObject("3. Mike L. NOT FINISHED 7 SHOT", (void*)3);
+		autonSelector->AddObject("3. Mike L. - Bottom Left, Center Field Pickup -- 7 SHOT", (void*)3);
 		autonSelector->AddObject("4. Jack Tusman NOT FINISHED", (void*)4);
 		autonSelector->AddObject("5. Jim the Welder - Bottom Right, Pyramid Pickup", (void*)5);
 		autonSelector->AddObject("6. Cliff Dey - Shoot from back of pyramid ONLY", (void*)6);

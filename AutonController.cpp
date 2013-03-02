@@ -139,7 +139,7 @@ void AutonController::JimTheWelder() {
 	climber->TiltDownToDrivingPosition();
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn(1.00);
+		shooter->TurnOn(0.85);
 		drivebase->ResetGyro();
 		drivebase->ResetEncoders();
 		
@@ -432,7 +432,7 @@ void AutonController::MikeLube() {
 	printf("Auton Step: %d \n", m_step);
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn();
+		shooter->TurnOn(0.85);
 		
 		drivebase->ResetGyro();
 		drivebase->ResetEncoders();
