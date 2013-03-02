@@ -507,11 +507,41 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else if (m_step == 8) {
+		shooter->TurnOn();
+		shooter->BucketUp();
 		m_driveStraightComplete = drivebase->DriveStraight(110, 2.0, 0.0002);
 		if (m_driveStraightComplete) {
 			m_driveStraightComplete = false;
 			drivebase->ResetEncoders();
 			drivebase->ResetGyro();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 9) {
+		if (m_timer->Get() > 0.7) {
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 0.85) {
+			shooter->Reset();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 10) {
+		if (m_timer->Get() > 0.7) {
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 0.85) {
+			shooter->Reset();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 11) {
+		if (m_timer->Get() > 0.7) {
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 0.85) {
+			shooter->Reset();
+			m_timer->Reset();
 			m_step++;
 		}
 	} else {

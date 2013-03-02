@@ -40,7 +40,7 @@ DriveBase::DriveBase() {
 	// Ultrasonic
 	m_ultrasonic = new AnalogChannel(ULTRASONIC_CHANNEL);
 	
-	m_launch = new DigitalOutput(LED_DIGITAL_OUTPUT);
+	m_led = new Relay(LED_RELAY_CHAN, Relay::kForwardOnly);
 	
 	m_gyroController = new PIDController(0.0, 0.0, 0.0, m_gyro, m_leftDrive);
 	m_gyroController->SetPID(GYRO_P, GYRO_I, GYRO_D);
@@ -57,10 +57,11 @@ void DriveBase::EnableTeleopControls() {
 	m_rightDrive->Set(-1*m_controls->GetRightY());
 	
 	//Ultrasonic to turn on light
-	if(GetUltrasonicDistance() > 500 && GetUltrasonicDistance() < 560) {
-		m_launch->Set(1);
+	float ultrasonicDistance = GetUltrasonicDistance();
+	if(ultrasonicDistance > 500 && ultrasonicDistance < 560) {
+		m_led->Set(Relay::kOn);
 	} else {
-		m_launch->Set(0);
+		m_led->Set(Relay::kOff);
 	}
 }
 

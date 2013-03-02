@@ -30,9 +30,9 @@ void Climber::EnableTeleopControls() {
 	int lowerMastLimit = 600;
 	int upperMastLimit = 30;
 
-	if (m_controls->GetClimberButton(3) && mastPosition > upperMastLimit) {
+	if (m_controls->GetClimberButton(3) /*&& mastPosition > upperMastLimit*/) {
 		m_mast->Set(1.0);
-	} else if (m_controls->GetClimberButton(2) && mastPosition < lowerMastLimit) {
+	} else if (m_controls->GetClimberButton(2) /*&& mastPosition < lowerMastLimit*/) {
 		m_mast->Set(-1.0);
 	} else {
 		m_mast->Set(0.0);
