@@ -17,6 +17,8 @@ private:
 	
 	Climber* climber;
 	
+	int m_climbSequenceStep;
+	
 public:
 	static Climber* GetInstance();
 	Climber();

@@ -20,12 +20,14 @@ Climber::Climber() {
 	
 	m_tiltPot = new AnalogChannel(TILT_POT_CHAN);
 	m_mastPot = new AnalogChannel(MAST_POT_CHAN);
+	
+	m_climbSequenceStep = 0;
 }
 
 void Climber::EnableTeleopControls() {
 	// MAST
 	int mastPosition = m_mastPot->GetValue();
-	int lowerMastLimit = 580;
+	int lowerMastLimit = 600;
 	int upperMastLimit = 30;
 
 	if (m_controls->GetClimberButton(3) && mastPosition > upperMastLimit) {
@@ -38,12 +40,17 @@ void Climber::EnableTeleopControls() {
 	
 	// TILT
 	int forwardTiltLimit = 590;
-	int backTiltLimit = 434;
+	int backTiltLimit = 430;
 	
 	float tiltSpeed = m_controls->GetClimberY();
 	int tiltPosition = m_tiltPot->GetValue();
 	
-	if (m_controls->GetClimberButton(7) || m_controls->GetShooterButton(8)) {
+	// Reset Climbing Sequence
+	if (m_controls->GetClimberButton(9)) {
+		m_climbSequenceStep = 0;
+	}
+	
+	if (m_controls->GetShooterButton(8)) {
 		TiltDownToDrivingPosition();
 	} else if (m_controls->GetShooterButton(9)) {
 		TiltUpToDrivingPosition();
@@ -51,14 +58,36 @@ void Climber::EnableTeleopControls() {
 		m_tilt->Set(tiltSpeed);
 	} else if (tiltSpeed > 0.1 && tiltPosition > backTiltLimit) {
 		m_tilt->Set(tiltSpeed);
-	} else {
+	} else if (m_controls->GetClimberButton(6)) { 					// TILT TO LEVEL 1
+		if (tiltPosition < 500) {
+			m_tilt->Set(-1.0);
+		} else if (tiltPosition >= 500) {
+			m_tilt->Set(0.0);
+		}
+	} else if (m_controls->GetClimberButton(7)) {		// RAISE MAST TO READY LEVEL 1 CLIMB
+		if (mastPosition > 395) {
+			m_mast->Set(1.0);
+		} else if (mastPosition <= 395) {
+			m_mast->Set(0.0);
+		}
+	} else if (m_controls->GetClimberButton(8)) {
+		if (m_climbSequenceStep == 0) {			
+			if (tiltPosition >= 500 && mastPosition <= 395) {
+				m_climbSequenceStep++;
+			}
+		} else {
+			m_mast->Set(0.0);
+			m_tilt->Set(0.0);
+		}
+	}
+	else {
 		m_tilt->Set(0.0);
 	}
 }
 
 void Climber::TiltDownToDrivingPosition() {
 	int tiltPosition = m_tiltPot->GetValue();
-	int targetPosition = 432;
+	int targetPosition = 430;
 	int position1 = targetPosition + 30;
 	int position2 = targetPosition + 20;
 	int position3 = targetPosition + 10;

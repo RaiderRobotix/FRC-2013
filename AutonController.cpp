@@ -136,6 +136,7 @@ void AutonController::CliffDey() {
  */
 void AutonController::JimTheWelder() {
 	printf("Auton Step: %d \n", m_step);
+	climber->TiltDownToDrivingPosition();
 	if (m_step == 0) {
 		shooter->Reset();
 		shooter->TurnOn(0.85);
