@@ -139,7 +139,7 @@ void AutonController::JimTheWelder() {
 	climber->TiltDownToDrivingPosition();
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn(0.85);
+		shooter->TurnOn(1.00);
 		drivebase->ResetGyro();
 		drivebase->ResetEncoders();
 		
