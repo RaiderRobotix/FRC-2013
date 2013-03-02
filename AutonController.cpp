@@ -588,7 +588,7 @@ void AutonController::WayneCokeley() {
 			m_step++;
 		}
 	} else if (m_step == 7) {
-		m_turnComplete = drivebase->Turn(53, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(50, 5.0, 0.45);
 		shooter->TiltDown();
 		shooter->BucketDown();
 		shooter->TurnOff();
