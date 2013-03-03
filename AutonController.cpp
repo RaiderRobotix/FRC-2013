@@ -106,20 +106,20 @@ void AutonController::CliffDey() {
 			m_step++;
 		}
 	} else if (m_step == 2) {
-		if (m_timer->Get() > 1.0) {
+		if (m_timer->Get() > 1.2) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 1.15) {
+		if (m_timer->Get() > 1.35) {
 			shooter->Reset();
 			
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 3) {
-		if (m_timer->Get() > 1.0) {
+		if (m_timer->Get() > 1.2) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 1.15) {
+		if (m_timer->Get() > 1.35) {
 			shooter->Reset();
 			
 			m_timer->Reset();
@@ -139,7 +139,7 @@ void AutonController::JimTheWelder() {
 	climber->TiltDownToDrivingPosition();
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn(0.85);
+		shooter->TurnOn();
 		drivebase->ResetGyro();
 		drivebase->ResetEncoders();
 		
@@ -156,20 +156,20 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 2) {
-		if (m_timer->Get() > 1.0) {
+		if (m_timer->Get() > 1.2) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 1.15) {
+		if (m_timer->Get() > 1.35) {
 			shooter->Reset();
 			
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 3) {
-		if (m_timer->Get() > 1.0) {
+		if (m_timer->Get() > 1.2) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 1.15) {
+		if (m_timer->Get() > 1.35) {
 			shooter->Reset();
 			
 			m_timer->Reset();
@@ -432,7 +432,7 @@ void AutonController::MikeLube() {
 	printf("Auton Step: %d \n", m_step);
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn(0.85);
+		shooter->TurnOn();
 		
 		drivebase->ResetGyro();
 		drivebase->ResetEncoders();
@@ -450,20 +450,20 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else if (m_step == 2) {
-		if (m_timer->Get() > 1.0) {
+		if (m_timer->Get() > 1.2) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 1.15) {
+		if (m_timer->Get() > 1.35) {
 			shooter->Reset();
 			
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 3) {
-		if (m_timer->Get() > 1.0) {
+		if (m_timer->Get() > 1.2) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 1.15) {
+		if (m_timer->Get() > 1.35) {
 			shooter->Reset();
 			drivebase->ResetGyro();
 			drivebase->ResetEncoders();
@@ -570,7 +570,7 @@ void AutonController::WayneCokeley() {
 			m_step++;
 		}
 	} else if (m_step == 2) {
-		m_turnComplete = drivebase->Turn(25, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(25, 5.0, 0.55);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -618,7 +618,7 @@ void AutonController::WayneCokeley() {
 			m_step++;
 		}
 	} else if (m_step == 7) {
-		m_turnComplete = drivebase->Turn(50, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(50, 5.0, 0.55);
 		shooter->TiltDown();
 		shooter->BucketDown();
 		shooter->TurnOff();
@@ -640,7 +640,7 @@ void AutonController::WayneCokeley() {
 			m_step++;
 		}
 	} else if (m_step == 9) {
-		m_turnComplete = drivebase->Turn(-120, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(-120, 5.0, 0.55);
 		shooter->BucketUp();
 		shooter->TurnOn();
 		if(m_turnComplete) {

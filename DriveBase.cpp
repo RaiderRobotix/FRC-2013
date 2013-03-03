@@ -58,7 +58,7 @@ void DriveBase::EnableTeleopControls() {
 	
 	//Ultrasonic to turn on light
 	float ultrasonicDistance = GetUltrasonicDistance();
-	if(ultrasonicDistance > 190 && ultrasonicDistance < 210) {
+	if(ultrasonicDistance > 180 && ultrasonicDistance < 200) {
 		m_led->Set(Relay::kOn);
 	} else {
 		m_led->Set(Relay::kOff);
