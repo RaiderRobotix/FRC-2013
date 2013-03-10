@@ -97,10 +97,10 @@ void AutonController::CliffDey() {
 		m_timer->Reset();
 		m_step++;
 	} else if (m_step == 1) {
-		if (m_timer->Get() > 1.0) {
+		if (m_timer->Get() > 9.0) {
 			shooter->Shoot();
 		} 
-		if (m_timer->Get() > 1.15) {
+		if (m_timer->Get() > 9.15) {
 			shooter->Reset();
 			m_timer->Reset();
 			m_step++;
@@ -483,7 +483,7 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else if (m_step == 5) {
-		m_turnComplete = drivebase->Turn(80, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(80, 5.0, 0.5);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -499,7 +499,7 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else if (m_step == 7) {
-		m_turnComplete = drivebase->Turn(-75, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(-75, 5.0, 0.5);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -536,6 +536,15 @@ void AutonController::MikeLube() {
 			m_step++;
 		}
 	} else if (m_step == 11) {
+		if (m_timer->Get() > 0.7) {
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 0.85) {
+			shooter->Reset();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 12) {
 		if (m_timer->Get() > 0.7) {
 			shooter->Shoot();
 		} 
