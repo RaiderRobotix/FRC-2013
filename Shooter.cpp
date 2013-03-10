@@ -42,13 +42,12 @@ Shooter::Shooter() {
 	m_rapidFireTimer = new Timer();
 	m_rapidFireTimer->Reset();
 	m_rapidFireStep = 0;
-	
 }
 
 void Shooter::EnableTeleopControls() {
 	if (m_controls->GetShooterTrigger()) { // Shoot
-		m_shooterWheel1->Set(0.8);
-		m_shooterWheel2->Set(0.8);
+		m_shooterWheel1->Set(1.0);
+		m_shooterWheel2->Set(1.0);
 		m_shooterIsOn = true;
 	} else {
 		m_shooterWheel1->Set(0.0);

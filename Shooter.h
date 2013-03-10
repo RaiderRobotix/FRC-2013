@@ -33,6 +33,7 @@ private:
 	Timer* m_timer;
 	Timer* m_tiltTimer;
 	Timer* m_rapidFireTimer;
+	Timer* m_pickupTimer;
 	bool m_timerIsRunning;
 	int m_rapidFireStep;
 	
