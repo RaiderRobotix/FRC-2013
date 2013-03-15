@@ -22,13 +22,15 @@ Climber::Climber() {
 	m_mastPot = new AnalogChannel(MAST_POT_CHAN);
 	
 	m_climbSequenceStep = 0;
+	
+	shooter = Shooter::GetInstance();
 }
 
 void Climber::EnableTeleopControls() {
 	// MAST
 	int mastPosition = m_mastPot->GetValue();
 	int lowerMastLimit = 57; // 57 for climbing, 67 for manual
-	int upperMastLimit = 880;
+	int upperMastLimit = 900;
 
 	// TILT
 	int forwardTiltLimit = 630;
@@ -67,7 +69,10 @@ void Climber::EnableTeleopControls() {
 			m_mast->Set(0.0);
 		}
 	} else if (m_controls->GetClimberButton(8)) {
-		if (m_climbSequenceStep == 0) {			
+		if (m_climbSequenceStep == 0) {
+			shooter->BucketDown();
+			shooter->TiltDown();
+			shooter->Shoot();
 			if (mastPosition > 58) {
 				m_mast->Set(-1.0);
 			} else {
@@ -103,7 +108,7 @@ void Climber::EnableTeleopControls() {
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 5) {
-			if (tiltPosition > 550) {
+			if (tiltPosition > 549) {
 				m_tilt->Set(1.0);
 			} else {
 				m_tilt->Set(0.0);
@@ -145,10 +150,31 @@ void Climber::EnableTeleopControls() {
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 11) {
-			if (tiltPosition > 516) {
+			if (tiltPosition > 506) {
 				m_tilt->Set(1.0);
 			} else {
 				m_tilt->Set(0.0);
+				m_climbSequenceStep++;
+			}
+		} else if (m_climbSequenceStep == 12) {
+			if (mastPosition > 54) {
+				m_mast->Set(-1.0);
+			} else {
+				m_mast->Set(0.0);
+				m_climbSequenceStep++;
+			}
+		} else if (m_climbSequenceStep == 13) {
+			if (tiltPosition < 526) {
+				m_tilt->Set(-1.0);
+			} else {
+				m_tilt->Set(0.0);
+				m_climbSequenceStep++;
+			}
+		} else if (m_climbSequenceStep == 14) {
+			if (mastPosition < 80) {
+				m_mast->Set(1.0);
+			} else {
+				m_mast->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else {

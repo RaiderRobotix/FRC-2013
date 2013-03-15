@@ -4,6 +4,7 @@
 #include "WPILib.h"
 #include "Controls.h"
 #include "Constants.h"
+#include "Shooter.h"
 
 class Climber {
 private:
@@ -15,7 +16,7 @@ private:
 	AnalogChannel* m_tiltPot;
 	AnalogChannel* m_mastPot;
 	
-	Climber* climber;
+	Shooter* shooter;
 	
 	int m_climbSequenceStep;
 	
