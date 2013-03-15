@@ -59,7 +59,8 @@ public:
 		autonSelector->AddObject("4. Jack Tusman NOT FINISHED", (void*)4);
 		autonSelector->AddObject("5. Jim the Welder - Bottom Right, Pyramid Pickup", (void*)5);
 		autonSelector->AddObject("6. Cliff Dey - Shoot from back of pyramid ONLY", (void*)6);
-		//autonSelector->AddObject("7. ", (void*)7);
+		autonSelector->AddObject("7. Shaun McNulty - Shoot from back drive to front ", (void*)7);
+		//autonSelector->AddObject("8. ", (void*)8);
 		autonSelector->AddDefault("0. DEFAULT - Do Nothing", (void*)0);
 		
 		SmartDashboard::init();
@@ -86,6 +87,7 @@ public:
 				case 4: autonController->JackTusman(); break;
 				case 5: autonController->JimTheWelder(); break;
 				case 6: autonController->CliffDey(); break;
+				case 7: autonController->ShaunMcNulty(); break;
 			}
 			
 			// Print Encoder Values to Driver station LCD

@@ -109,6 +109,48 @@ void Climber::EnableTeleopControls() {
 				m_tilt->Set(0.0);
 				m_climbSequenceStep++;
 			}
+		} else if (m_climbSequenceStep == 6) {
+			if (mastPosition > 610) {
+				m_mast->Set(-1.0);
+			} else {
+				m_mast->Set(0.0);
+				m_climbSequenceStep++;
+			}
+		} else if (m_climbSequenceStep == 7) {
+			if (tiltPosition < 605) {
+				m_tilt->Set(-1.0);
+			} else {
+				m_tilt->Set(0.0);
+				m_climbSequenceStep++;
+			}
+		} else if (m_climbSequenceStep == 8) {
+			if (mastPosition > 152) {
+				m_mast->Set(-1.0);
+			} else {
+				m_mast->Set(0.0);
+				m_climbSequenceStep++;
+			}
+		} else if (m_climbSequenceStep == 9) {
+			if (tiltPosition > 544) {
+				m_tilt->Set(1.0);
+			} else {
+				m_tilt->Set(0.0);
+				m_climbSequenceStep++;
+			}
+		} else if (m_climbSequenceStep == 10) {
+			if (mastPosition < 172) {
+				m_mast->Set(1.0);
+			} else {
+				m_mast->Set(0.0);
+				m_climbSequenceStep++;
+			}
+		} else if (m_climbSequenceStep == 11) {
+			if (tiltPosition > 516) {
+				m_tilt->Set(1.0);
+			} else {
+				m_tilt->Set(0.0);
+				m_climbSequenceStep++;
+			}
 		} else {
 			m_mast->Set(0.0);
 			m_tilt->Set(0.0);

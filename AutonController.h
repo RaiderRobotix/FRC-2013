@@ -35,6 +35,7 @@ public:
 	void JackTusman();
 	void MikeLube();
 	void WayneCokeley();
+	void ShaunMcNulty();
 	
 	void DoNothing();
 };
