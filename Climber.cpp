@@ -29,8 +29,8 @@ Climber::Climber() {
 void Climber::EnableTeleopControls() {
 	// MAST
 	int mastPosition = m_mastPot->GetValue();
-	int lowerMastLimit = 57; // 57 for climbing, 67 for manual
-	int upperMastLimit = 900;
+	int lowerMastLimit = 35;
+	int upperMastLimit = 950; //2000;
 
 	// TILT
 	int forwardTiltLimit = 630;
@@ -63,7 +63,7 @@ void Climber::EnableTeleopControls() {
 			m_tilt->Set(0.0);
 		}
 	} else if (m_controls->GetClimberButton(7)) {		// RAISE MAST TO READY LEVEL 1 CLIMB
-		if (mastPosition < 406) {
+		if (mastPosition < 380) {
 			m_mast->Set(1.0);
 		} else {
 			m_mast->Set(0.0);

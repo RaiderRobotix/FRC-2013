@@ -194,7 +194,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 6) {
-		m_turnComplete = drivebase->Turn(-55, 5.0, 0.45);
+		m_turnComplete = drivebase->Turn(-55, 5.0, 0.55);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -210,7 +210,7 @@ void AutonController::JimTheWelder() {
 			m_step++;
 		}
 	} else if (m_step == 8) {
-		m_turnComplete = drivebase->Turn(70.0, 12.0, 0.45); 
+		m_turnComplete = drivebase->Turn(70.0, 12.0, 0.55); 
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
