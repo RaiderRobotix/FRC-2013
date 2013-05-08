@@ -31,6 +31,7 @@ public:
 	void Test();
 	
 	void CliffDey();
+	void CliffDey(float shooterSpeed);
 	void JimTheWelder();
 	void JackTusman();
 	void MikeLube();

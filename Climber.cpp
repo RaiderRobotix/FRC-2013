@@ -29,8 +29,8 @@ Climber::Climber() {
 void Climber::EnableTeleopControls() {
 	// MAST
 	int mastPosition = m_mastPot->GetValue();
-	int lowerMastLimit = 35;
-	int upperMastLimit = 950; //2000;
+	int lowerMastLimit = 960;
+	int upperMastLimit = 136; //2000;
 
 	// TILT
 	int forwardTiltLimit = 630;
@@ -44,9 +44,9 @@ void Climber::EnableTeleopControls() {
 		m_climbSequenceStep = 0;
 	}
 	
-	if (m_controls->GetClimberButton(3) && mastPosition < upperMastLimit) {
+	if (m_controls->GetClimberButton(3) && mastPosition > upperMastLimit) {
 		m_mast->Set(1.0);
-	} else if (m_controls->GetClimberButton(2) && mastPosition > lowerMastLimit) {
+	} else if (m_controls->GetClimberButton(2) && mastPosition < lowerMastLimit) {
 		m_mast->Set(-1.0);
 	} else if (m_controls->GetShooterButton(8)) {
 		TiltDownToDrivingPosition();
@@ -63,17 +63,29 @@ void Climber::EnableTeleopControls() {
 			m_tilt->Set(0.0);
 		}
 	} else if (m_controls->GetClimberButton(7)) {		// RAISE MAST TO READY LEVEL 1 CLIMB
-		if (mastPosition < 380) {
+		if (mastPosition > 610) {	// 338
 			m_mast->Set(1.0);
 		} else {
 			m_mast->Set(0.0);
+		}
+	} else if(m_controls->GetClimberButton(10)) {	// TILT BACK TO LOAD COLORED DISCS
+		if (tiltPosition > 477) {
+			m_tilt->Set(1.0);
+		} else {
+			m_tilt->Set(0.0);
+		}
+	}  else if(m_controls->GetClimberButton(11)) {	// vertical to block
+		if (tiltPosition < 513) {
+			m_tilt->Set(-1.0);
+		} else {
+			m_tilt->Set(0.0);
 		}
 	} else if (m_controls->GetClimberButton(8)) {
 		if (m_climbSequenceStep == 0) {
 			shooter->BucketDown();
 			shooter->TiltDown();
 			shooter->Shoot();
-			if (mastPosition > 58) {
+			if (mastPosition < 964) { // 24
 				m_mast->Set(-1.0);
 			} else {
 				m_mast->Set(0.0);
@@ -87,97 +99,79 @@ void Climber::EnableTeleopControls() {
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 2) {
-			if (mastPosition < 72) {
+			if (mastPosition > 927) { // 62
 				m_mast->Set(1.0);
 			} else {
 				m_mast->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 3) {
-			if (tiltPosition < 560) {
+			if (tiltPosition < 562) {	// 560
 				m_tilt->Set(-1.0);
 			} else {
 				m_tilt->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 4) {
-			if (mastPosition < 878) {
+			if (mastPosition > 126) {  // 862
 				m_mast->Set(1.0);
 			} else {
 				m_mast->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 5) {
-			if (tiltPosition > 549) {
+			if (tiltPosition > 542) {
 				m_tilt->Set(1.0);
 			} else {
 				m_tilt->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 6) {
-			if (mastPosition > 610) {
+			if (mastPosition < 815) { //190
 				m_mast->Set(-1.0);
 			} else {
 				m_mast->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 7) {
-			if (tiltPosition < 605) {
-				m_tilt->Set(-1.0);
+			if (tiltPosition > 510) {
+				m_tilt->Set(1.0);
 			} else {
 				m_tilt->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 8) {
-			if (mastPosition > 152) {
+			if (mastPosition < 963) { // 28
 				m_mast->Set(-1.0);
 			} else {
 				m_mast->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 9) {
-			if (tiltPosition > 544) {
-				m_tilt->Set(1.0);
+			if (tiltPosition < 529) {
+				m_tilt->Set(-1.0);
 			} else {
 				m_tilt->Set(0.0);
 				m_climbSequenceStep++;
 			}
-		} else if (m_climbSequenceStep == 10) {
-			if (mastPosition < 172) {
+		} /*else if (m_climbSequenceStep == 10) {
+			if (mastPosition > 121) { //862 level 3
 				m_mast->Set(1.0);
 			} else {
 				m_mast->Set(0.0);
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 11) {
-			if (tiltPosition > 506) {
-				m_tilt->Set(1.0);
+			if (tiltPosition < 550) {
+				m_tilt->Set(-1.0);
 			} else {
-				m_tilt->Set(0.0);
+				m_tilt->Set(0.0); 
 				m_climbSequenceStep++;
 			}
 		} else if (m_climbSequenceStep == 12) {
-			if (mastPosition > 54) {
-				m_mast->Set(-1.0);
-			} else {
-				m_mast->Set(0.0);
-				m_climbSequenceStep++;
-			}
-		} else if (m_climbSequenceStep == 13) {
-			if (tiltPosition < 526) {
-				m_tilt->Set(-1.0);
-			} else {
-				m_tilt->Set(0.0);
-				m_climbSequenceStep++;
-			}
-		} else if (m_climbSequenceStep == 14) {
-			if (mastPosition < 80) {
-				m_mast->Set(1.0);
-			} else {
-				m_mast->Set(0.0);
-				m_climbSequenceStep++;
-			}
-		} else {
+			shooter->TiltUp();
+			m_climbSequenceStep++;
+		} */else {
 			m_mast->Set(0.0);
 			m_tilt->Set(0.0);
 		}

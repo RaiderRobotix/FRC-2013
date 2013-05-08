@@ -60,7 +60,14 @@ public:
 		autonSelector->AddObject("5. Jim the Welder - Bottom Right, Pyramid Pickup", (void*)5);
 		autonSelector->AddObject("6. Cliff Dey - Shoot from back of pyramid ONLY", (void*)6);
 		autonSelector->AddObject("7. Shaun McNulty - Shoot from back drive to front ", (void*)7);
-		//autonSelector->AddObject("8. ", (void*)8);
+		autonSelector->AddObject("8. Cliff Dey - Shooter Speed 70%", (void*)8);
+		autonSelector->AddObject("9. Cliff Dey - Shooter Speed 75%", (void*)9);
+		autonSelector->AddObject("10. Cliff Dey - Shooter Speed 77%", (void*)10);
+		autonSelector->AddObject("11. Cliff Dey - Shooter Speed 80%", (void*)11);
+		autonSelector->AddObject("12. Cliff Dey - Shooter Speed 82%", (void*)12);
+		autonSelector->AddObject("13. Cliff Dey - Shooter Speed 85%", (void*)13);
+		autonSelector->AddObject("14. Cliff Dey - Shooter Speed 87%", (void*)14);
+		autonSelector->AddObject("15. Cliff Dey - Shooter Speed 90%", (void*)15);
 		autonSelector->AddDefault("0. DEFAULT - Do Nothing", (void*)0);
 		
 		SmartDashboard::init();
@@ -88,6 +95,14 @@ public:
 				case 5: autonController->JimTheWelder(); break;
 				case 6: autonController->CliffDey(); break;
 				case 7: autonController->ShaunMcNulty(); break;
+				case 8: autonController->CliffDey(0.70); break;
+				case 9: autonController->CliffDey(0.75); break;
+				case 10: autonController->CliffDey(0.77); break;
+				case 11: autonController->CliffDey(0.80); break;
+				case 12: autonController->CliffDey(0.82); break;
+				case 13: autonController->CliffDey(0.85); break;
+				case 14: autonController->CliffDey(0.87); break;
+				case 15: autonController->CliffDey(0.90); break;
 			}
 			
 			// Print Encoder Values to Driver station LCD

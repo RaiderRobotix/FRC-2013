@@ -46,8 +46,16 @@ Shooter::Shooter() {
 
 void Shooter::EnableTeleopControls() {
 	if (m_controls->GetShooterTrigger()) { // Shoot
-		m_shooterWheel1->Set(1.0);
-		m_shooterWheel2->Set(1.0);
+		m_shooterWheel1->Set(0.85);
+		m_shooterWheel2->Set(0.85);
+		m_shooterIsOn = true;
+	} else if (m_controls->GetShooterButton(11)) { // Shoot
+		m_shooterWheel1->Set(0.85);
+		m_shooterWheel2->Set(0.85);
+		m_shooterIsOn = true;
+	} else if (m_controls->GetShooterButton(10)) { // Shoot
+		m_shooterWheel1->Set(0.8);
+		m_shooterWheel2->Set(0.8);
 		m_shooterIsOn = true;
 	} else {
 		m_shooterWheel1->Set(0.0);
@@ -92,7 +100,7 @@ void Shooter::EnableTeleopControls() {
 		m_rapidFireTimer->Reset();
 	}
 	
-	if (m_controls->GetShooterY() > 0.5) {
+	if (m_controls->GetShooterButton(5)) {
 		BucketUp();
 		m_tiltTimer->Start();
 	}
@@ -112,8 +120,8 @@ void Shooter::EnableTeleopControls() {
 		TiltDown();
 	}
 	
-	if (m_controls->GetShooterButton(5)) {
-		TiltUp();
+	if (m_controls->GetShooterY() > 0.5) {
+		BucketUp();
 	}
 	
 	if (m_controls->GetShooterButton(3)) {

@@ -36,7 +36,7 @@ static const int CLIMBER_JOYSTICK_PORT = 4;
 static const int TILT_POT_CHAN = 3;
 static const int MAST_POT_CHAN = 4;
 
-// SENSORS
+// SENSORS 
 
 static const int LEFT_ENCODER_A = 1;
 static const int LEFT_ENCODER_B = 2;

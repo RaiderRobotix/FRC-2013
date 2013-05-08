@@ -91,35 +91,121 @@ void AutonController::Test() {
 void AutonController::CliffDey() {
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn();
+		shooter->TurnOn(0.85);
 		
 		m_timer->Start();
 		m_timer->Reset();
 		m_step++;
 	} else if (m_step == 1) {
-		if (m_timer->Get() > 1.2) {
+		if (m_timer->Get() > 6.2) { //1.2 original
 			shooter->Shoot();
 		} 
-		if (m_timer->Get() > 1.35) {
+		if (m_timer->Get() > 6.35) {
 			shooter->Reset();
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 2) {
-		if (m_timer->Get() > 1.2) {
+		if (m_timer->Get() > 2.2) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 1.35) {
+		if (m_timer->Get() > 2.35) {
 			shooter->Reset();
 			
 			m_timer->Reset();
 			m_step++;
 		}
 	} else if (m_step == 3) {
-		if (m_timer->Get() > 1.2) {
+		if (m_timer->Get() > 2.2) {
 			shooter->Shoot();
 		}
-		if (m_timer->Get() > 1.35) {
+		if (m_timer->Get() > 2.35) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else {
+		if (m_timer->Get() > 3.0) {
+			shooter->TurnOff();
+			m_timer->Stop();
+			m_timer->Reset();
+		}
+	}
+}
+
+void AutonController::CliffDey(float shooterSpeed) {
+	if (m_step == 0) {
+		shooter->Reset();
+		shooter->TurnOn(shooterSpeed);
+		
+		m_timer->Start();
+		m_timer->Reset();
+		m_step++;
+	} else if (m_step == 1) {
+		if (m_timer->Get() > 2.2) { //1.2 original
+			shooter->Shoot();
+		} 
+		if (m_timer->Get() > 2.35) {
+			shooter->Reset();
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 2) {
+		if (m_timer->Get() > 2.2) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 2.35) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 3) {
+		if (m_timer->Get() > 2.2) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 2.35) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 4) {
+		if (m_timer->Get() > 2.2) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 2.35) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 5) {
+		if (m_timer->Get() > 2.2) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 2.35) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 6) {
+		if (m_timer->Get() > 2.2) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 2.35) {
+			shooter->Reset();
+			
+			m_timer->Reset();
+			m_step++;
+		}
+	} else if (m_step == 7) {
+		if (m_timer->Get() > 2.2) {
+			shooter->Shoot();
+		}
+		if (m_timer->Get() > 2.35) {
 			shooter->Reset();
 			
 			m_timer->Reset();
@@ -436,7 +522,7 @@ void AutonController::MikeLube() {
 	printf("Auton Step: %d \n", m_step);
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn();
+		shooter->TurnOn(0.8);
 		
 		drivebase->ResetGyro();
 		drivebase->ResetEncoders();
@@ -445,10 +531,10 @@ void AutonController::MikeLube() {
 		m_timer->Reset();
 		m_step++;
 	} else if (m_step == 1) {
-		if (m_timer->Get() > 1.0) {
+		if (m_timer->Get() > 1.2) {
 			shooter->Shoot();
 		} 
-		if (m_timer->Get() > 1.15) {
+		if (m_timer->Get() > 1.35) {
 			shooter->Reset();
 			m_timer->Reset();
 			m_step++;
@@ -707,7 +793,7 @@ void AutonController::WayneCokeley() {
 void AutonController::ShaunMcNulty() {
 	if (m_step == 0) {
 		shooter->Reset();
-		shooter->TurnOn();
+		shooter->TurnOn(0.80);
 		
 		m_timer->Start();
 		m_timer->Reset();
@@ -760,7 +846,7 @@ void AutonController::ShaunMcNulty() {
 			m_step++;
 		}
 	} else if (m_step == 6) {
-		m_turnComplete = drivebase->Turn(-10, 5.0, 0.60);
+		m_turnComplete = drivebase->Turn(-17, 5.0, 0.60);
 		if(m_turnComplete) {
 			m_turnComplete = false;
 			drivebase->ResetEncoders();
@@ -795,7 +881,7 @@ void AutonController::ShaunMcNulty() {
 			drivebase->ResetGyro();
 			m_step++;
 		}
-	} else if (m_step == 10) {
+	} /*else if (m_step == 10) {
 		m_turnComplete = drivebase->Turn(-120, 5.0, 0.55);
 		shooter->BucketUp();
 		shooter->TurnOn();
@@ -836,7 +922,7 @@ void AutonController::ShaunMcNulty() {
 			m_timer->Reset();
 			m_step++;
 		}
-	} else {
+	} */else {
 		if (m_timer->Get() > 2.0) {
 			shooter->TurnOff();
 			m_timer->Stop();
